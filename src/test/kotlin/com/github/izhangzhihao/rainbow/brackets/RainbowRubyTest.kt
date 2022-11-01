@@ -6,14 +6,16 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.kotest.matchers.shouldBe
 import org.jetbrains.plugins.ruby.ruby.lang.RubyFileType
+import org.junit.Test
 
 class RainbowRubyTest : LightJavaCodeInsightFixtureTestCase() {
 
+    @Test
     fun testRubyPluginEnabled() {
         assertTrue(PluginManagerCore.getPlugin(PluginId.getId("org.jetbrains.plugins.ruby"))?.isEnabled!!)
     }
 
-
+    @Test
     fun testRainbowForIssue53Part0() {
         val code =
                 """
@@ -38,6 +40,7 @@ end
                 )
     }
 
+    @Test
     fun testRainbowForIssue53Part1() {
         val code =
                 """
@@ -58,6 +61,7 @@ foobar(p1: "", p2: false, p3: 1)
                 )
     }
 
+    @Test
     fun testRainbowForIssue53Part2() {
         val code =
                 """
@@ -93,6 +97,7 @@ end
                 )
     }
 
+    @Test
     fun testRainbowForIssue53Part3() {
         val code =
                 """
@@ -125,6 +130,7 @@ end
                 )
     }
 
+    @Test
     fun testRainbowForIssue53Part4() {
         val code =
                 """

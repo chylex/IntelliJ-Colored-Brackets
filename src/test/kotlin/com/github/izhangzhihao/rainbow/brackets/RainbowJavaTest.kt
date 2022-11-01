@@ -6,6 +6,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import org.junit.Test
 
 class RainbowJavaTest : LightJavaCodeInsightFixtureTestCase() {
     override fun tearDown() {
@@ -22,6 +23,7 @@ class RainbowJavaTest : LightJavaCodeInsightFixtureTestCase() {
         rainbowSettings.languageBlacklist = setOf()
     }
 
+    @Test
     fun testRainbowForJava() {
         @Language("Java") val code =
                 """
@@ -60,6 +62,7 @@ public class Test<T> {
                 )
     }
 
+    @Test
     fun testDisableRainbowForJava() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isRainbowEnabled = false
@@ -83,6 +86,7 @@ public class Test<T> {
                 )
     }
 
+    @Test
     fun testDisableRainbowAngleBracketsForJava() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isEnableRainbowAngleBrackets = false
@@ -121,6 +125,7 @@ public class Test<T> {
                 )
     }
 
+    @Test
     fun testDisableRainbowRoundBracketsForJava() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isEnableRainbowRoundBrackets = false
@@ -151,6 +156,7 @@ public class Test<T> {
                 )
     }
 
+    @Test
     fun testDisableRainbowSquigglyBracketsForJava() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isEnableRainbowSquigglyBrackets = false
@@ -187,6 +193,7 @@ public class Test<T> {
                 )
     }
 
+    @Test
     fun testDoNOTRainbowifyBracketsWithoutContentForJava() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isDoNOTRainbowifyBracketsWithoutContent = true
@@ -223,6 +230,7 @@ public class Test<T> {
                 )
     }
 
+    @Test
     fun testDoNOTRainbowifyBracketsWhenJavaInBlacklist() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isDoNOTRainbowifyBracketsWithoutContent = true
@@ -246,6 +254,7 @@ public class Test<T> {
                 .shouldBe(0)
     }
 
+    @Test
     fun testIssue391() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.cycleCountOnAllBrackets = true

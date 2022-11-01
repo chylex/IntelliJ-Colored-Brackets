@@ -9,13 +9,16 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import org.junit.Test
 
 class RainbowJavaScriptTest : LightJavaCodeInsightFixtureTestCase() {
 
+    @Test
     fun testJavaScriptPluginEnabled() {
         assertTrue(PluginManagerCore.getPlugin(PluginId.getId("JavaScript"))?.isEnabled!!)
     }
 
+    @Test
     fun testIssue11() {
         @Language("JavaScript") val code = """
 "use strict";
@@ -41,6 +44,7 @@ const moment = require('moment')
                 )
     }
 
+    @Test
     fun testIssue12() {
         @Language("JavaScript") val code = """
 "use strict";
@@ -64,6 +68,7 @@ console.log(a == b)
                 )
     }
 
+    @Test
     fun testIssue21() {
 
         @Language("JavaScript") val code = "open (\$" + "{f})\n" + "open (\$" + "{f} )"
@@ -85,6 +90,7 @@ console.log(a == b)
                 )
     }
 
+    @Test
     fun testIssue23() {
         @Language("JavaScript") val code = """
 "use strict";
@@ -131,6 +137,7 @@ if ((a.field_detail && a.is) ||
                 )
     }
 
+    @Test
     fun testIssue38() {
         @Language("JavaScript") val code = """
 const element = ( <div> <h1>Hello, world!</h1> </div> );
@@ -162,6 +169,7 @@ const element = ( <div> <h1>Hello, world!</h1> </div> );
                 )
     }
 
+    @Test
     fun `for somehow, it just don't work "testIssue39"`() {
         @Language("JavaScript") val code = """
     const html = '<div><div><div>Hello</div></div></div>'
@@ -193,6 +201,7 @@ const element = ( <div> <h1>Hello, world!</h1> </div> );
                 )
     }
 
+    @Test
     fun testIssue31() {
         @Language("JavaScript") val code = """
     "use strict";
@@ -223,6 +232,7 @@ const element = ( <div> <h1>Hello, world!</h1> </div> );
                 )
     }
 
+    @Test
     fun testIssue427() {
         @Language("TypeScript") val code = """let example: Array<Map<string,string>>;""".trimIndent()
 

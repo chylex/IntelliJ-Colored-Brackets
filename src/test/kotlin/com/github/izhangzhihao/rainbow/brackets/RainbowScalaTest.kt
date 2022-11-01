@@ -6,6 +6,7 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.plugins.scala.ScalaFileType
+import org.junit.Test
 
 class RainbowScalaTest : LightJavaCodeInsightFixtureTestCase() {
 
@@ -20,6 +21,7 @@ class RainbowScalaTest : LightJavaCodeInsightFixtureTestCase() {
         rainbowSettings.isDoNOTRainbowifyBracketsWithoutContent = false
     }
 
+    @Test
     fun testRainbowForScala() {
         @Language("Scala") val code =
                 """
@@ -60,6 +62,7 @@ import scala.annotation.tailrec
                 )
     }
 
+    @Test
     fun testDisableRainbowSquareBracketsForScala() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isEnableRainbowSquareBrackets = false

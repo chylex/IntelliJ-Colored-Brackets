@@ -4,8 +4,11 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import com.jetbrains.php.lang.PhpFileType
 import io.kotest.matchers.shouldBe
+import org.junit.Test
 
 class RainbowPHPTest : LightJavaCodeInsightFixtureTestCase() {
+
+    @Test
     fun testRainbowForPHP() {
         val code =
                 """

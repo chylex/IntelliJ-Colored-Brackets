@@ -4,8 +4,11 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import com.jetbrains.lang.dart.DartFileType
 import io.kotest.matchers.shouldBe
+import org.junit.Test
 
 class RainbowDartTest : LightJavaCodeInsightFixtureTestCase() {
+    
+    @Test
     fun testRainbowForDart() {
         val code =
                 """

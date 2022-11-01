@@ -5,9 +5,11 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.plugins.groovy.GroovyFileType
+import org.junit.Test
 
 class RainbowGroovyTest : LightJavaCodeInsightFixtureTestCase() {
 
+    @Test
     fun testRainbowForGroovy() {
         @Language("Groovy") val code =
                 """

@@ -5,9 +5,11 @@ import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import org.intellij.lang.annotations.Language
+import org.junit.Test
 
 class RandomColorGenTest : LightJavaCodeInsightFixtureTestCase() {
 
+    @Test
     fun testRandomColorGenWorks() {
         val rainbowSettings = RainbowSettings.instance
         rainbowSettings.isRainbowEnabled = true

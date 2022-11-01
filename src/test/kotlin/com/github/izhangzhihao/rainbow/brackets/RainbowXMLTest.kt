@@ -6,8 +6,11 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
+import org.junit.Test
 
 class RainbowXMLTest : LightJavaCodeInsightFixtureTestCase() {
+    
+    @Test
     fun `disabled for non-determinist results of testRainbowTagNameForXML`() {
         @Language("XML") val code =
                 """
@@ -83,6 +86,7 @@ class RainbowXMLTest : LightJavaCodeInsightFixtureTestCase() {
                 )
     }
 
+    @Test
     fun testRainbowForXML() {
         @Language("XML") val code =
                 """

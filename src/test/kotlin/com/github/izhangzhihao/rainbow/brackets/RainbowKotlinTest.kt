@@ -5,8 +5,11 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.idea.KotlinFileType
+import org.junit.Test
 
 class RainbowKotlinTest : LightJavaCodeInsightFixtureTestCase() {
+    
+    @Test
     fun testRainbowForKotlin() {
         @Language("kotlin") val code =
                 """
@@ -64,6 +67,7 @@ fun <T> filter(l: List<T>, f: (T) -> Boolean): MutableList<T> {
                 )
     }
 
+    @Test
     fun testRainbowArrowForKotlin() {
         @Language("kotlin") val code =
                 """
@@ -125,6 +129,7 @@ val a: (Int) -> Unit = { aa ->
                 )
     }
 
+    @Test
     fun `ForSomeHowTheTestNotPassed "testRainbowLabelForKotlin"`() {
         @Language("kotlin") val code =
                 """
@@ -160,6 +165,7 @@ class AA {
                 )
     }
 
+    @Test
     fun testKotlinFunctionLiteralBracesAndArrow() {
         @Language("kotlin") val code =
                 """
