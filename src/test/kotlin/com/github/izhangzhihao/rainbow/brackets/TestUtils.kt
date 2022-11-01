@@ -1,6 +1,5 @@
 package com.github.izhangzhihao.rainbow.brackets
 
-
 val brackets = RainbowHighlighter.getBrackets()
 
 fun CharSequence.toChar() = elementAt(0)

@@ -9,19 +9,21 @@ val PsiElement.startOffset: Int get() = textRange.startOffset
 val PsiElement.endOffset: Int get() = textRange.endOffset
 
 tailrec fun PsiElement.findPrevSibling(condition: (PsiElement) -> Boolean): PsiElement? {
-    val prevSibling = prevSibling ?: return null
-    return if (condition(prevSibling)) {
-        prevSibling
-    } else {
-        prevSibling.findPrevSibling(condition)
-    }
+	val prevSibling = prevSibling ?: return null
+	return if (condition(prevSibling)) {
+		prevSibling
+	}
+	else {
+		prevSibling.findPrevSibling(condition)
+	}
 }
 
 tailrec fun PsiElement.findNextSibling(condition: (PsiElement) -> Boolean): PsiElement? {
-    val nextSibling = nextSibling ?: return null
-    return if (condition(nextSibling)) {
-        nextSibling
-    } else {
-        nextSibling.findNextSibling(condition)
-    }
+	val nextSibling = nextSibling ?: return null
+	return if (condition(nextSibling)) {
+		nextSibling
+	}
+	else {
+		nextSibling.findNextSibling(condition)
+	}
 }

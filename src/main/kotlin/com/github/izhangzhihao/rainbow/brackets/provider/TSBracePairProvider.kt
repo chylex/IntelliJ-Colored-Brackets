@@ -5,5 +5,5 @@ import com.intellij.lang.javascript.JSTokenTypes.GT
 import com.intellij.lang.javascript.JSTokenTypes.LT
 
 class TSBracePairProvider : BracePairProvider {
-    override fun pairs(): List<BracePair> = listOf(BracePair(LT, GT, false))
+	override fun pairs(): List<BracePair> = listOf(BracePair(LT, GT, false))
 }

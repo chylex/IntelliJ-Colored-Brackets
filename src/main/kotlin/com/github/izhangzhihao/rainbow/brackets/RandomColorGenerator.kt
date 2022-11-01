@@ -10,9 +10,9 @@ import java.awt.Color
 val mapper: ObjectMapper by lazy { jacksonObjectMapper() }
 
 fun randomColor(options: String): Color {
-    val ops: Map<String, String> = mapper.readValue(options)
-    return com.github.izhangzhihao.rainbow.brackets.color.randomColor(
-        fromString(ops.getOrDefault("hue", "random")),
-        Luminosity.valueOf(ops.getOrDefault("luminosity", "random"))
-    )
+	val ops: Map<String, String> = mapper.readValue(options)
+	return com.github.izhangzhihao.rainbow.brackets.color.randomColor(
+		fromString(ops.getOrDefault("hue", "random")),
+		Luminosity.valueOf(ops.getOrDefault("luminosity", "random"))
+	)
 }

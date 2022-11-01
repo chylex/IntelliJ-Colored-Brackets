@@ -8,9 +8,9 @@ import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 
 class RainbowXMLTest : LightJavaCodeInsightFixtureTestCase() {
-    fun `disabled for non-determinist results of testRainbowTagNameForXML`() {
-        @Language("XML") val code =
-                """
+	fun `disabled for non-determinist results of testRainbowTagNameForXML`() {
+		@Language("XML") val code =
+			"""
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE note SYSTEM>
 <idea-plugin>
@@ -22,70 +22,70 @@ class RainbowXMLTest : LightJavaCodeInsightFixtureTestCase() {
     </description>
 </idea-plugin>
                 """.trimIndent()
-        val rainbowSettings = RainbowSettings.instance
-        rainbowSettings.rainbowifyTagNameInXML = true
-        myFixture.configureByText(XmlFileType.INSTANCE, code)
-        PsiDocumentManager.getInstance(project).commitAllDocuments()
-        val doHighlighting = myFixture.doHighlighting()
-        assertFalse(doHighlighting.isEmpty())
-        doHighlighting
-                .map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-                .toTypedArray()
-                .shouldBe(
-                        arrayOf(
-                                angleLevel(0),
-                                angleLevel(0),
-
-                                angleLevel(0),
-                                angleLevel(0),
-
-                                angleLevel(0),
-                                angleLevel(0),//idea-plugin
-                                angleLevel(0),
-
-                                angleLevel(1),
-                                angleLevel(1),//name
-                                angleLevel(1),
-                                angleLevel(1),
-                                angleLevel(1),//name
-                                angleLevel(1),
-
-                                angleLevel(1),
-                                angleLevel(1),//description
-                                angleLevel(1),
-
-                                angleLevel(2),
-                                angleLevel(2),//p
-                                angleLevel(2),
-                                angleLevel(2),
-                                angleLevel(2),//p
-                                angleLevel(2),
-
-                                angleLevel(2),
-                                angleLevel(2),//p
-                                angleLevel(2),
-                                angleLevel(2),
-                                angleLevel(2),//p
-                                angleLevel(2),
-
-                                angleLevel(2),
-                                angleLevel(2),//br
-                                angleLevel(2),
-
-                                angleLevel(1),
-                                angleLevel(1),//description
-                                angleLevel(1),
-
-                                angleLevel(0),
-                                angleLevel(0),//idea-plugin
-                                angleLevel(0)
-                        )
-                )
-    }
-
-    fun testRainbowForXML() {
-        @Language("XML") val code =
-                """
+		val rainbowSettings = RainbowSettings.instance
+		rainbowSettings.rainbowifyTagNameInXML = true
+		myFixture.configureByText(XmlFileType.INSTANCE, code)
+		PsiDocumentManager.getInstance(project).commitAllDocuments()
+		val doHighlighting = myFixture.doHighlighting()
+		assertFalse(doHighlighting.isEmpty())
+		doHighlighting
+			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
+			.toTypedArray()
+			.shouldBe(
+				arrayOf(
+					angleLevel(0),
+					angleLevel(0),
+					
+					angleLevel(0),
+					angleLevel(0),
+					
+					angleLevel(0),
+					angleLevel(0),//idea-plugin
+					angleLevel(0),
+					
+					angleLevel(1),
+					angleLevel(1),//name
+					angleLevel(1),
+					angleLevel(1),
+					angleLevel(1),//name
+					angleLevel(1),
+					
+					angleLevel(1),
+					angleLevel(1),//description
+					angleLevel(1),
+					
+					angleLevel(2),
+					angleLevel(2),//p
+					angleLevel(2),
+					angleLevel(2),
+					angleLevel(2),//p
+					angleLevel(2),
+					
+					angleLevel(2),
+					angleLevel(2),//p
+					angleLevel(2),
+					angleLevel(2),
+					angleLevel(2),//p
+					angleLevel(2),
+					
+					angleLevel(2),
+					angleLevel(2),//br
+					angleLevel(2),
+					
+					angleLevel(1),
+					angleLevel(1),//description
+					angleLevel(1),
+					
+					angleLevel(0),
+					angleLevel(0),//idea-plugin
+					angleLevel(0)
+				)
+			)
+	}
+	
+	fun testRainbowForXML() {
+		@Language("XML") val code =
+			"""
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE note SYSTEM>
 <idea-plugin>
@@ -97,53 +97,53 @@ class RainbowXMLTest : LightJavaCodeInsightFixtureTestCase() {
     </description>
 </idea-plugin>
                 """.trimIndent()
-        val rainbowSettings = RainbowSettings.instance
-        rainbowSettings.rainbowifyTagNameInXML = false
-        myFixture.configureByText(XmlFileType.INSTANCE, code)
-        PsiDocumentManager.getInstance(project).commitAllDocuments()
-        val doHighlighting = myFixture.doHighlighting()
-        assertFalse(doHighlighting.isEmpty())
-        doHighlighting
-                .map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-                .toTypedArray()
-                .shouldBe(
-                        arrayOf(
-                                angleLevel(0),
-                                angleLevel(0),
-
-                                angleLevel(0),
-                                angleLevel(0),
-
-                                angleLevel(0),
-                                angleLevel(0),
-
-                                angleLevel(1),
-                                angleLevel(1),
-                                angleLevel(1),
-                                angleLevel(1),
-
-                                angleLevel(1),
-                                angleLevel(1),
-
-                                angleLevel(2),
-                                angleLevel(2),
-                                angleLevel(2),
-                                angleLevel(2),
-
-                                angleLevel(2),
-                                angleLevel(2),
-                                angleLevel(2),
-                                angleLevel(2),
-
-                                angleLevel(2),
-                                angleLevel(2),
-
-                                angleLevel(1),
-                                angleLevel(1),
-
-                                angleLevel(0),
-                                angleLevel(0)
-                        )
-                )
-    }
+		val rainbowSettings = RainbowSettings.instance
+		rainbowSettings.rainbowifyTagNameInXML = false
+		myFixture.configureByText(XmlFileType.INSTANCE, code)
+		PsiDocumentManager.getInstance(project).commitAllDocuments()
+		val doHighlighting = myFixture.doHighlighting()
+		assertFalse(doHighlighting.isEmpty())
+		doHighlighting
+			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
+			.toTypedArray()
+			.shouldBe(
+				arrayOf(
+					angleLevel(0),
+					angleLevel(0),
+					
+					angleLevel(0),
+					angleLevel(0),
+					
+					angleLevel(0),
+					angleLevel(0),
+					
+					angleLevel(1),
+					angleLevel(1),
+					angleLevel(1),
+					angleLevel(1),
+					
+					angleLevel(1),
+					angleLevel(1),
+					
+					angleLevel(2),
+					angleLevel(2),
+					angleLevel(2),
+					angleLevel(2),
+					
+					angleLevel(2),
+					angleLevel(2),
+					angleLevel(2),
+					angleLevel(2),
+					
+					angleLevel(2),
+					angleLevel(2),
+					
+					angleLevel(1),
+					angleLevel(1),
+					
+					angleLevel(0),
+					angleLevel(0)
+				)
+			)
+	}
 }

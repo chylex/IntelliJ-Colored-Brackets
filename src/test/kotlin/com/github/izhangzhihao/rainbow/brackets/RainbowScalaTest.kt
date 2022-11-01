@@ -8,21 +8,21 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.plugins.scala.ScalaFileType
 
 class RainbowScalaTest : LightJavaCodeInsightFixtureTestCase() {
-
-    override fun tearDown() {
-        super.tearDown()
-        val rainbowSettings = RainbowSettings.instance
-        rainbowSettings.isRainbowEnabled = true
-        rainbowSettings.isEnableRainbowAngleBrackets = true
-        rainbowSettings.isEnableRainbowRoundBrackets = true
-        rainbowSettings.isEnableRainbowSquareBrackets = true
-        rainbowSettings.isEnableRainbowSquigglyBrackets = true
-        rainbowSettings.isDoNOTRainbowifyBracketsWithoutContent = false
-    }
-
-    fun testRainbowForScala() {
-        @Language("Scala") val code =
-                """
+	
+	override fun tearDown() {
+		super.tearDown()
+		val rainbowSettings = RainbowSettings.instance
+		rainbowSettings.isRainbowEnabled = true
+		rainbowSettings.isEnableRainbowAngleBrackets = true
+		rainbowSettings.isEnableRainbowRoundBrackets = true
+		rainbowSettings.isEnableRainbowSquareBrackets = true
+		rainbowSettings.isEnableRainbowSquigglyBrackets = true
+		rainbowSettings.isDoNOTRainbowifyBracketsWithoutContent = false
+	}
+	
+	fun testRainbowForScala() {
+		@Language("Scala") val code =
+			"""
 import scala.annotation.tailrec
 
  @tailrec
@@ -32,39 +32,39 @@ import scala.annotation.tailrec
     }
   }
                 """.trimIndent()
-        myFixture.configureByText(ScalaFileType.INSTANCE, code)
-        PsiDocumentManager.getInstance(project).commitAllDocuments()
-        val doHighlighting = myFixture.doHighlighting()
-        assertFalse(doHighlighting.isEmpty())
-        doHighlighting.filter { brackets.contains(it.text.toChar()) }
-                .filter { it?.forcedTextAttributesKey != null }
-                .map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-                .toTypedArray()
-                .shouldBe(
-                        arrayOf(
-                                squareLevel(0),
-                                squareLevel(0),
-
-                                roundLevel(0),
-                                roundLevel(0),
-
-                                squigglyLevel(0),
-                                squigglyLevel(1),
-                                squareLevel(0),
-                                squareLevel(0),
-                                roundLevel(0),
-                                roundLevel(0),
-                                squigglyLevel(1),
-                                squigglyLevel(0)
-                        )
-                )
-    }
-
-    fun testDisableRainbowSquareBracketsForScala() {
-        val rainbowSettings = RainbowSettings.instance
-        rainbowSettings.isEnableRainbowSquareBrackets = false
-        @Language("Scala") val code =
-                """
+		myFixture.configureByText(ScalaFileType.INSTANCE, code)
+		PsiDocumentManager.getInstance(project).commitAllDocuments()
+		val doHighlighting = myFixture.doHighlighting()
+		assertFalse(doHighlighting.isEmpty())
+		doHighlighting.filter { brackets.contains(it.text.toChar()) }
+			.filter { it?.forcedTextAttributesKey != null }
+			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
+			.toTypedArray()
+			.shouldBe(
+				arrayOf(
+					squareLevel(0),
+					squareLevel(0),
+					
+					roundLevel(0),
+					roundLevel(0),
+					
+					squigglyLevel(0),
+					squigglyLevel(1),
+					squareLevel(0),
+					squareLevel(0),
+					roundLevel(0),
+					roundLevel(0),
+					squigglyLevel(1),
+					squigglyLevel(0)
+				)
+			)
+	}
+	
+	fun testDisableRainbowSquareBracketsForScala() {
+		val rainbowSettings = RainbowSettings.instance
+		rainbowSettings.isEnableRainbowSquareBrackets = false
+		@Language("Scala") val code =
+			"""
 import scala.annotation.tailrec
 
  @tailrec
@@ -74,27 +74,27 @@ import scala.annotation.tailrec
     }
   }
                 """.trimIndent()
-        myFixture.configureByText(ScalaFileType.INSTANCE, code)
-        PsiDocumentManager.getInstance(project).commitAllDocuments()
-        val doHighlighting = myFixture.doHighlighting()
-        assertFalse(doHighlighting.isEmpty())
-        doHighlighting.filter { brackets.contains(it.text.toChar()) }
-                .filter { it?.forcedTextAttributesKey != null }
-                .map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-                .toTypedArray()
-                .shouldBe(
-                        arrayOf(
-
-                                roundLevel(0),
-                                roundLevel(0),
-
-                                squigglyLevel(0),
-                                squigglyLevel(1),
-                                roundLevel(0),
-                                roundLevel(0),
-                                squigglyLevel(1),
-                                squigglyLevel(0)
-                        )
-                )
-    }
+		myFixture.configureByText(ScalaFileType.INSTANCE, code)
+		PsiDocumentManager.getInstance(project).commitAllDocuments()
+		val doHighlighting = myFixture.doHighlighting()
+		assertFalse(doHighlighting.isEmpty())
+		doHighlighting.filter { brackets.contains(it.text.toChar()) }
+			.filter { it?.forcedTextAttributesKey != null }
+			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
+			.toTypedArray()
+			.shouldBe(
+				arrayOf(
+					
+					roundLevel(0),
+					roundLevel(0),
+					
+					squigglyLevel(0),
+					squigglyLevel(1),
+					roundLevel(0),
+					roundLevel(0),
+					squigglyLevel(1),
+					squigglyLevel(0)
+				)
+			)
+	}
 }

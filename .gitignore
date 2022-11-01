@@ -1,10 +1,5 @@
 /.idea/*
-!/.idea/icon.png
-!/.idea/icon_dark.png
-!/.idea/vcs.xml
-.sandbox/
-.gradle/
-build/
-*.iml
-.DS_Store
-out
+!/.idea/runConfigurations
+
+/.gradle/
+/build/
