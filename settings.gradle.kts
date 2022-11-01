@@ -1,6 +1,8 @@
+rootProject.name = "RainbowBrackets"
+
 pluginManagement {
-    repositories {
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots/")
-        gradlePluginPortal()
-    }
+	repositories {
+		maven(url = "https://oss.sonatype.org/content/repositories/snapshots/")
+		gradlePluginPortal()
+	}
 }

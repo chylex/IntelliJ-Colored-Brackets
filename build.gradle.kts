@@ -1,103 +1,70 @@
-import org.jetbrains.intellij.tasks.RunPluginVerifierTask.FailureLevel.*
+@file:Suppress("SpellCheckingInspection")
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val name: String by project
-val ideaVersion: String by project
-val kotlinVersion: String by project
-val javaVersion: String by project
-val kotlinLanguageVersion: String by project
-val kotlinTargetVersion: String by project
-val pluginVerifierIdeVersions: String by project
-val publishChannels: String by project
-
 plugins {
-    id("org.jetbrains.intellij") version "1.9.0"
-    id("com.adarshr.test-logger") version "3.2.0"
-    id("org.jetbrains.kotlin.jvm") version "1.7.20"
-    id("idea")
+	kotlin("jvm") version "1.8.0"
+	id("org.jetbrains.intellij") version "1.15.0"
 }
+
+group = "com.chylex.intellij.rainbowbrackets"
+version = "6.26-chylex-0"
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven(url = "https://maven-central.storage-download.googleapis.com/repos/central/data/")
-    maven(url = "https://maven.aliyun.com/nexus/content/groups/public/")
-    maven(url = "https://www.jetbrains.com/intellij-repository/releases")
-    maven(url = "https://www.jetbrains.com/intellij-repository/snapshots")
-}
-
-intellij {
-    pluginName.set(name)
-
-    version.set(ideaVersion)
-    //localPath = '/Users/izhangzhihao/Library/Application Support/JetBrains/Toolbox/apps/IDEA-U/ch-0/201.6668.121/IntelliJ IDEA 2020.1 EAP.app/Contents'
-    //localPath = '/Users/izhangzhihao/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/201.6668.126/CLion.app/Contents'
-    updateSinceUntilBuild.set(false)
-
-    plugins.set(
-        listOf(
-            "java",
-            "java-i18n",
-            "JavaScriptLanguage",
-            "DatabaseTools",
-            "CSS",
-            "platform-images",
-            "Groovy",
-            "properties",
-            "yaml",
-            "org.jetbrains.kotlin:203-$kotlinVersion-release-IJ5981.133-1",
-            "org.intellij.scala:2020.3.21",
-            "Dart:203.5981.155",
-            "org.jetbrains.plugins.ruby:203.5981.155",
-            "com.jetbrains.php:203.5981.155",
-            "com.jetbrains.sh:203.5981.37",
-            "com.jetbrains.plugins.jade:203.5981.155",
-            "org.jetbrains.plugins.go-template:203.5981.155",
-            "Pythonid:203.5981.155",
-        )
-    )
-}
-
-tasks {
-    runIde {
-        systemProperties["idea.auto.reload.plugins"] = false
-        jvmArgs = listOf(
-            "-Xms512m",
-            "-Xmx2048m",
-        )
-    }
-
-    publishPlugin {
-        token.set(System.getenv("token"))
-        channels.set(publishChannels.split(",").map { it.trim() }.toList())
-    }
-
-    runPluginVerifier {
-        ideVersions.set(pluginVerifierIdeVersions.split(",").map { it.trim() }.toList())
-        failureLevel.set(listOf(COMPATIBILITY_PROBLEMS))
-    }
-
-    testlogger {
-        theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA
-    }
+	mavenCentral()
+	maven(url = "https://www.jetbrains.com/intellij-repository/releases")
+	maven(url = "https://www.jetbrains.com/intellij-repository/snapshots")
 }
 
 dependencies {
-    //implementation("org.eclipse.mylyn.github:org.eclipse.egit.github.core:5.11.0.202103091610-r") {
-    //    exclude("gson")
-    //}
-    compileOnly(fileTree("libs"))
-    testImplementation("io.kotest:kotest-assertions-core:5.5.0")
+	compileOnly(fileTree("libs"))
+	
+	testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+	testImplementation("io.kotest:kotest-assertions-core:5.5.5")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+kotlin {
+	jvmToolchain(17)
+}
+
+intellij {
+	type.set("IU")
+	version.set("2023.2.2")
+	updateSinceUntilBuild.set(false)
+	
+	plugins.set(
+		listOf(
+			// Built-in
+			"Groovy",
+			"JavaScript",
+			"com.intellij.css",
+			"com.intellij.database",
+			"com.intellij.java",
+			"org.intellij.plugins.markdown",
+			"org.jetbrains.kotlin",
+			"org.jetbrains.plugins.yaml",
+			// Downloaded
+			"Dart:232.8660.129",                             // https://plugins.jetbrains.com/plugin/6351-dart/versions/stable
+			"Pythonid:232.9921.47",                          // https://plugins.jetbrains.com/plugin/631-python/versions
+			"com.jetbrains.php:232.9921.55",                 // https://plugins.jetbrains.com/plugin/6610-php/versions
+			"com.jetbrains.sh:232.8660.88",                  // https://plugins.jetbrains.com/plugin/13122-shell-script/versions
+			"org.intellij.scala:2023.2.23",                  // https://plugins.jetbrains.com/plugin/1347-scala/versions
+			"org.jetbrains.plugins.go-template:232.9921.89", // https://plugins.jetbrains.com/plugin/10581-go-template/versions
+			"org.jetbrains.plugins.ruby:232.9921.47",        // https://plugins.jetbrains.com/plugin/1293-ruby/versions
+		)
+	)
+}
+
+tasks.patchPluginXml {
+	sinceBuild.set("232")
+}
+
+tasks.test {
+	useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.languageVersion = kotlinLanguageVersion
-    kotlinOptions.apiVersion = kotlinTargetVersion
-    kotlinOptions.jvmTarget = javaVersion
-    kotlinOptions.freeCompilerArgs = listOf("-Xskip-runtime-version-check", "-Xjsr305=strict")
+	kotlinOptions.freeCompilerArgs = listOf(
+		"-Xjvm-default=all"
+	)
 }
