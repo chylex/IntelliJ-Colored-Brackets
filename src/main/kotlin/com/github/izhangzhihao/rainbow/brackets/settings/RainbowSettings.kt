@@ -21,7 +21,6 @@ class RainbowSettings : PersistentStateComponent<RainbowSettings> {
     var isShowRainbowIndentGuides = true
     var isDoNOTRainbowifyBracketsWithoutContent = false
     var isDoNOTRainbowifyTheFirstLevel = false
-    var version = "Unknown"
     var isRainbowifyHTMLInsideJS = true
     var isRainbowifyKotlinLabel = true
     var isRainbowifyKotlinFunctionLiteralBracesAndArrow = true
@@ -36,7 +35,6 @@ class RainbowSettings : PersistentStateComponent<RainbowSettings> {
     var disableRainbowIndentsInZenMode = true
     var useColorGenerator = false
     var customColorGeneratorOption: String? = null
-    var showNotificationOnUpdate = true
     var rainbowifyTagNameInXML = false
     var doNOTRainbowifyTemplateString = false
     var doNOTRainbowifyBigFiles = true
