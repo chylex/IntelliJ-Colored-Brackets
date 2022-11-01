@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.chylex.intellij.rainbowbrackets"
-version = "6.26-chylex-0"
+version = "6.26-chylex-1"
 
 repositories {
 	mavenCentral()

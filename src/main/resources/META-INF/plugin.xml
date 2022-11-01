@@ -50,6 +50,12 @@
         ]]></description>
 
     <change-notes><![CDATA[
+        <p>6.26-chylex-1</p>
+        <ul>
+            <li>Removed post-update notification.</li>
+        </ul>
+        <br/>
+        
         <p>6.26</p>
         <ul>
             <li>Bump dependencies.</li>
