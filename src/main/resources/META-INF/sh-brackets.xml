@@ -1,5 +1,5 @@
 <idea-plugin>
-    <extensions defaultExtensionNs="izhangzhihao.rainbow.brackets">
+    <extensions defaultExtensionNs="com.chylex.intellij.rainbowbrackets">
         <bracePairProvider language="Shell Script"
                              implementationClass="com.github.izhangzhihao.rainbow.brackets.provider.SHBracePairProvider"/>
     </extensions>

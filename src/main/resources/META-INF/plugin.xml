@@ -1,5 +1,5 @@
 <idea-plugin require-restart="true">
-    <id>izhangzhihao.rainbow.brackets</id>
+    <id>com.chylex.intellij.rainbowbrackets</id>
     <name>Rainbow Brackets</name>
     <vendor email="izhangzhihao@hotmail.com" url="https://github.com/izhangzhihao">izhangzhihao</vendor>
 

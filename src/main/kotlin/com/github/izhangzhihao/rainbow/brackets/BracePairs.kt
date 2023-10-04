@@ -3,12 +3,17 @@ package com.github.izhangzhihao.rainbow.brackets
 import com.github.izhangzhihao.rainbow.brackets.provider.BracePairProvider
 import com.github.izhangzhihao.rainbow.brackets.util.memoize
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil
-import com.intellij.lang.*
+import com.intellij.lang.BracePair
+import com.intellij.lang.CompositeLanguage
+import com.intellij.lang.Language
+import com.intellij.lang.LanguageBraceMatching
+import com.intellij.lang.LanguageExtension
+import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.tree.IElementType
 
 object BracePairs {
 
-    private val providers = LanguageExtension<BracePairProvider>("izhangzhihao.rainbow.brackets.bracePairProvider")
+    private val providers = LanguageExtension<BracePairProvider>("com.chylex.intellij.rainbowbrackets.bracePairProvider")
 
     private val bracePairs =
             Language.getRegisteredLanguages()
