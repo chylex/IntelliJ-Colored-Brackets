@@ -10,13 +10,28 @@ plugins {
 group = "com.chylex.intellij.rainbowbrackets"
 version = "6.26-chylex-1"
 
+val ideVersion = "2023.2.2"
+
+idea {
+	module {
+		excludeDirs.add(file("gradle"))
+		excludeDirs.add(file("libs"))
+	}
+}
+
 repositories {
 	mavenCentral()
 	maven(url = "https://www.jetbrains.com/intellij-repository/releases")
 	maven(url = "https://www.jetbrains.com/intellij-repository/snapshots")
 }
 
+val clion: Configuration by configurations.creating
+val rider: Configuration by configurations.creating
+
 dependencies {
+	clion("com.jetbrains.intellij.clion:clion:$ideVersion")
+	rider("com.jetbrains.intellij.rider:riderRD:$ideVersion")
+	
 	compileOnly(fileTree("libs"))
 	
 	testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
@@ -29,7 +44,7 @@ kotlin {
 
 intellij {
 	type.set("IU")
-	version.set("2023.2.2")
+	version.set(ideVersion)
 	updateSinceUntilBuild.set(false)
 	
 	plugins.set(
@@ -67,4 +82,29 @@ tasks.withType<KotlinCompile> {
 	kotlinOptions.freeCompilerArgs = listOf(
 		"-Xjvm-default=all"
 	)
+}
+
+fun createDownloadIdeTask(name: String, dependency: Configuration, configuration: CopySpec.() -> Unit): Sync {
+	return tasks.create<Sync>(name) {
+		group = "ides"
+		outputs.upToDateWhen { false }
+		
+		from(dependency.map(::zipTree), configuration)
+		into(file("libs/${dependency.name}"))
+	}
+}
+
+val downloadIdeClion = createDownloadIdeTask("downloadIdeClion", clion) {
+	include("plugins/cidr-base-plugin/**")
+}
+
+val downloadIdeRider = createDownloadIdeTask("downloadIdeRider", rider) {
+	include("lib/app.jar")
+}
+
+tasks.create<Sync>("downloadExtraIdes") {
+	group = "ides"
+	
+	dependsOn(downloadIdeClion)
+	dependsOn(downloadIdeRider)
 }
