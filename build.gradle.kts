@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "com.chylex.intellij.rainbowbrackets"
-version = "6.26-chylex-2"
+version = "6.26-chylex-3"
 
 val ideVersion = "2023.2.2"
 val ideBuild = "232"
