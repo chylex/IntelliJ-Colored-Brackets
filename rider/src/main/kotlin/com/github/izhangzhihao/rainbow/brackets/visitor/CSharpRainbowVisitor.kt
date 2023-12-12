@@ -7,8 +7,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
-import com.jetbrains.rider.ideaInterop.fileTypes.csharp.kotoparser.lexer.CSharpTokenType
-import com.jetbrains.rider.ideaInterop.fileTypes.csharp.psi.CSharpDummyNode
+import com.jetbrains.rider.languages.fileTypes.csharp.kotoparser.lexer.CSharpTokenType
+import com.jetbrains.rider.languages.fileTypes.csharp.psi.CSharpDummyNode
 
 class CSharpRainbowVisitor : RainbowHighlightVisitor() {
 

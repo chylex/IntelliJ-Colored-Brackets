@@ -1,7 +1,7 @@
 package com.github.izhangzhihao.rainbow.brackets.provider
 
 import com.intellij.lang.BracePair
-import com.jetbrains.rider.ideaInterop.fileTypes.csharp.kotoparser.lexer.CSharpTokenType
+import com.jetbrains.rider.languages.fileTypes.csharp.kotoparser.lexer.CSharpTokenType
 
 class CSharpBracePairProvider : BracePairProvider {
     override fun pairs(): List<BracePair> = listOf(
