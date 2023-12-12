@@ -8,6 +8,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>6.26-chylex-4</p>
+        <ul>
+            <li>Support for Rider 2023.3.</li>
+        </ul>
+        <br />
+        
         <p>6.26-chylex-3</p>
         <ul>
             <li>Prepared fork for standalone release.</li>
