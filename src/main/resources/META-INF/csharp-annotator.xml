@@ -1,5 +1,5 @@
 <idea-plugin>
   <extensions defaultExtensionNs="com.intellij">
-    <annotator language="C#" implementationClass="com.github.izhangzhihao.rainbow.brackets.annotator.RainbowAnnotator" />
+    <annotator language="C#" implementationClass="com.chylex.intellij.coloredbrackets.annotator.RainbowAnnotator" />
   </extensions>
 </idea-plugin>

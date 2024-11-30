@@ -1,6 +1,6 @@
 <idea-plugin>
   <extensions defaultExtensionNs="com.chylex.coloredbrackets">
     <bracePairProvider language="Shell Script"
-                       implementationClass="com.github.izhangzhihao.rainbow.brackets.provider.SHBracePairProvider" />
+                       implementationClass="com.chylex.intellij.coloredbrackets.provider.SHBracePairProvider" />
   </extensions>
 </idea-plugin>

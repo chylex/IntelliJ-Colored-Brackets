@@ -1,12 +1,12 @@
 <idea-plugin>
   <extensions defaultExtensionNs="com.chylex.coloredbrackets">
     <bracePairProvider language="kotlin"
-                       implementationClass="com.github.izhangzhihao.rainbow.brackets.provider.KotlinBracePairProvider" />
+                       implementationClass="com.chylex.intellij.coloredbrackets.provider.KotlinBracePairProvider" />
   </extensions>
   <extensions defaultExtensionNs="com.intellij">
     <annotator language="kotlin"
-               implementationClass="com.github.izhangzhihao.rainbow.brackets.annotator.KotlinLambdaExpressionArrowAnnotator" />
+               implementationClass="com.chylex.intellij.coloredbrackets.annotator.KotlinLambdaExpressionArrowAnnotator" />
     <annotator language="kotlin"
-               implementationClass="com.github.izhangzhihao.rainbow.brackets.annotator.KotlinLabelAnnotator" />
+               implementationClass="com.chylex.intellij.coloredbrackets.annotator.KotlinLabelAnnotator" />
   </extensions>
 </idea-plugin>

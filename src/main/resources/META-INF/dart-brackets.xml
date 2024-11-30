@@ -1,6 +1,6 @@
 <idea-plugin>
   <extensions defaultExtensionNs="com.chylex.coloredbrackets">
     <bracePairProvider language="Dart"
-                       implementationClass="com.github.izhangzhihao.rainbow.brackets.provider.DartBracePairProvider" />
+                       implementationClass="com.chylex.intellij.coloredbrackets.provider.DartBracePairProvider" />
   </extensions>
 </idea-plugin>
