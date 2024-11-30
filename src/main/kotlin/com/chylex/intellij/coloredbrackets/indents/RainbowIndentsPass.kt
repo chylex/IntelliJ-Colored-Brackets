@@ -5,7 +5,6 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil
 import com.intellij.codeInsight.highlighting.CodeBlockSupportHandler
 import com.intellij.ide.actions.ToggleZenModeAction
-import com.intellij.lang.Language
 import com.intellij.lang.LanguageParserDefinitions
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.IndentGuideDescriptor
@@ -231,7 +230,7 @@ class RainbowIndentsPass internal constructor(
 	*/
 	
 	private inner class IndentsCalculator {
-		val myComments: MutableMap<Language, TokenSet> = HashMap()
+		val myComments: MutableMap<String, TokenSet> = HashMap()
 		val lineIndents = IntArray(document.lineCount) // negative value means the line is empty (or contains a comment) and indent
 		
 		// (denoted by absolute value) was deduced from enclosing non-empty lines
@@ -317,7 +316,7 @@ class RainbowIndentsPass internal constructor(
 				return false
 			}
 			val language = tokenType.language
-			var comments: TokenSet? = myComments[language]
+			var comments: TokenSet? = myComments[language.id]
 			if (comments == null) {
 				val definition = LanguageParserDefinitions.INSTANCE.forLanguage(language)
 				if (definition != null) {
@@ -327,7 +326,7 @@ class RainbowIndentsPass internal constructor(
 					return false
 				}
 				else {
-					myComments[language] = comments
+					myComments[language.id] = comments
 				}
 			}
 			return comments.contains(tokenType)

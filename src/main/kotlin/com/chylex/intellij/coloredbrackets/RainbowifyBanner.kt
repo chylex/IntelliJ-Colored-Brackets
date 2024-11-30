@@ -20,19 +20,20 @@ class RainbowifyBanner : EditorNotifications.Provider<EditorNotificationPanel>()
 	override fun getKey(): Key<EditorNotificationPanel> = KEY
 	
 	override fun createNotificationPanel(file: VirtualFile, fileEditor: FileEditor, project: Project): EditorNotificationPanel? {
+		val settings = RainbowSettings.instance
 		
-		if (!RainbowSettings.instance.isRainbowEnabled) {
-			if (RainbowSettings.instance.suppressDisabledCheck) return null
+		if (!settings.isRainbowEnabled) {
+			if (settings.suppressDisabledCheck) return null
 			return EditorNotificationPanel().apply {
 				text("Colored Brackets is now disabled")
 				icon(AllIcons.General.GearPlain)
 				createComponentActionLabel("got it, don't show again") {
-					RainbowSettings.instance.suppressDisabledCheck = true
+					settings.suppressDisabledCheck = true
 					EditorNotifications.getInstance(project).updateAllNotifications()
 				}
 				
 				createComponentActionLabel("enable Colored Brackets") {
-					RainbowSettings.instance.isRainbowEnabled = true
+					settings.isRainbowEnabled = true
 					EditorNotifications.getInstance(project).updateAllNotifications()
 				}
 			}
@@ -40,12 +41,12 @@ class RainbowifyBanner : EditorNotifications.Provider<EditorNotificationPanel>()
 		
 		val psiFile = file.toPsiFile(project)
 		if (psiFile != null && !checkForBigFile(psiFile)) {
-			if (RainbowSettings.instance.suppressBigFileCheck) return null
+			if (settings.suppressBigFileCheck) return null
 			return EditorNotificationPanel().apply {
-				text("Rainbowify is disabled for files > " + RainbowSettings.instance.bigFilesLinesThreshold + " lines")
+				text("Rainbowify is disabled for files > " + settings.bigFilesLinesThreshold + " lines")
 				icon(AllIcons.General.InspectionsEye)
 				createComponentActionLabel("got it, don't show again") {
-					RainbowSettings.instance.suppressBigFileCheck = true
+					settings.suppressBigFileCheck = true
 					EditorNotifications.getInstance(project).updateAllNotifications()
 				}
 				
@@ -57,16 +58,16 @@ class RainbowifyBanner : EditorNotifications.Provider<EditorNotificationPanel>()
 		}
 		
 		if (
-			RainbowSettings.instance.languageBlacklist.contains(file.fileType.name) ||
-			RainbowSettings.instance.languageBlacklist.contains(memoizedFileExtension(file.name))
+			settings.languageBlacklist.contains(file.fileType.name) ||
+			settings.languageBlacklist.contains(memoizedFileExtension(file.name))
 		) {
-			if (RainbowSettings.instance.suppressBlackListCheck) return null
+			if (settings.suppressBlackListCheck) return null
 			return EditorNotificationPanel().apply {
 				text("Rainbowify is disabled because the language/file extension is in the black list")
 				icon(AllIcons.General.InspectionsEye)
 				
 				createComponentActionLabel("got it, don't show again") {
-					RainbowSettings.instance.suppressBlackListCheck = true
+					settings.suppressBlackListCheck = true
 					EditorNotifications.getInstance(project).updateAllNotifications()
 				}
 				

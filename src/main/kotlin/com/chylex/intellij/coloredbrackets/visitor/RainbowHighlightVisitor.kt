@@ -21,10 +21,12 @@ abstract class RainbowHighlightVisitor : HighlightVisitor {
 	private var highlightInfoHolder: HighlightInfoHolder? = null
 	
 	override fun suitableForFile(file: PsiFile): Boolean {
-		return RainbowSettings.instance.isRainbowEnabled &&
+		val settings = RainbowSettings.instance
+		
+		return settings.isRainbowEnabled &&
 			checkForBigFile(file) &&
-			!RainbowSettings.instance.languageBlacklist.contains(file.fileType.name) &&
-			!RainbowSettings.instance.languageBlacklist.contains(memoizedFileExtension(file.name)) &&
+			!settings.languageBlacklist.contains(file.fileType.name) &&
+			!settings.languageBlacklist.contains(memoizedFileExtension(file.name)) &&
 			fileIsNotHaskellOrIntelliJHaskellPluginNotEnabled(file.fileType.name)
 	}
 	

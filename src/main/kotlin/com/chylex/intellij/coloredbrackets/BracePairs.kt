@@ -11,11 +11,12 @@ import com.intellij.lang.LanguageExtension
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.tree.IElementType
 
+@Suppress("ConvertLambdaToReference")
 object BracePairs {
 	
 	private val providers = LanguageExtension<BracePairProvider>("com.chylex.coloredbrackets.bracePairProvider")
 	
-	private val bracePairs =
+	private val bracePairs = lazy {
 		Language.getRegisteredLanguages()
 			.map { language ->
 				if (language is CompositeLanguage) {
@@ -71,8 +72,9 @@ object BracePairs {
 				language.displayName to braceMap
 			}
 			.toMap()
+	}
 	
-	fun getBracePairs(language: Language): MutableMap<String, MutableList<BracePair>>? = bracePairs[language.displayName]
+	fun getBracePairs(language: Language): MutableMap<String, MutableList<BracePair>>? = bracePairs.value[language.displayName]
 	
 	private fun getBraceTypeSetOf(language: Language): Set<IElementType> = getBracePairs(language)?.values?.flatten()?.map { listOf(it.leftBraceType, it.rightBraceType) }?.flatten()?.toSet() ?: emptySet()
 	

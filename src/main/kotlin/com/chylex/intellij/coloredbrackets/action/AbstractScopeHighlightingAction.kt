@@ -2,6 +2,7 @@ package com.chylex.intellij.coloredbrackets.action
 
 import com.chylex.intellij.coloredbrackets.RainbowInfo
 import com.intellij.codeInsight.highlighting.HighlightManager
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -18,6 +19,10 @@ import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 
 abstract class AbstractScopeHighlightingAction : AnAction() {
+	
+	final override fun getActionUpdateThread(): ActionUpdateThread {
+		return ActionUpdateThread.BGT
+	}
 	
 	final override fun update(e: AnActionEvent) {
 		e.presentation.isEnabledAndVisible = e.editor.let { it != null && it !is TextComponentEditor }

@@ -39,16 +39,21 @@ object RainbowHighlighter {
 	private val squigglyBrackets: CharArray = charArrayOf('{', '}')
 	private val angleBrackets: CharArray = charArrayOf('<', '>')
 	
-	private val settings = RainbowSettings.instance
+	private val settings
+		get() = RainbowSettings.instance
 	
-	private val roundBracketsRainbowColorKeys: Array<TextAttributesKey> =
+	private val roundBracketsRainbowColorKeys = lazy {
 		createRainbowAttributesKeys(KEY_ROUND_BRACKETS, settings.numberOfColors)
-	private val squareBracketsRainbowColorKeys: Array<TextAttributesKey> =
+	}
+	private val squareBracketsRainbowColorKeys = lazy {
 		createRainbowAttributesKeys(KEY_SQUARE_BRACKETS, settings.numberOfColors)
-	private val squigglyBracketsRainbowColorKeys: Array<TextAttributesKey> =
+	}
+	private val squigglyBracketsRainbowColorKeys = lazy {
 		createRainbowAttributesKeys(KEY_SQUIGGLY_BRACKETS, settings.numberOfColors)
-	private val angleBracketsRainbowColorKeys: Array<TextAttributesKey> =
+	}
+	private val angleBracketsRainbowColorKeys = lazy {
 		createRainbowAttributesKeys(KEY_ANGLE_BRACKETS, settings.numberOfColors)
+	}
 	
 	private val rainbowElement: HighlightInfoType = HighlightInfoType
 		.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, DefaultLanguageHighlighterColors.CONSTANT)
@@ -68,10 +73,10 @@ object RainbowHighlighter {
 	
 	fun getRainbowAttributesKeys(rainbowName: String): Array<TextAttributesKey> {
 		return when (rainbowName) {
-			NAME_ROUND_BRACKETS    -> roundBracketsRainbowColorKeys
-			NAME_SQUARE_BRACKETS   -> squareBracketsRainbowColorKeys
-			NAME_SQUIGGLY_BRACKETS -> squigglyBracketsRainbowColorKeys
-			NAME_ANGLE_BRACKETS    -> angleBracketsRainbowColorKeys
+			NAME_ROUND_BRACKETS    -> roundBracketsRainbowColorKeys.value
+			NAME_SQUARE_BRACKETS   -> squareBracketsRainbowColorKeys.value
+			NAME_SQUIGGLY_BRACKETS -> squigglyBracketsRainbowColorKeys.value
+			NAME_ANGLE_BRACKETS    -> angleBracketsRainbowColorKeys.value
 			else                   -> throw IllegalArgumentException("Unknown rainbow name: $rainbowName")
 		}
 	}

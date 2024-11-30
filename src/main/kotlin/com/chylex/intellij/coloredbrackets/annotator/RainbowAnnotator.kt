@@ -18,6 +18,7 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement
 
 class RainbowAnnotator : Annotator {
 	override fun annotate(element: PsiElement, holder: AnnotationHolder) {
+		val settings = settings
 		if (settings.isRainbowEnabled && element is LeafPsiElement) {
 			if (!settings.applyColorsOfRoundForAllBrackets) {
 				if (settings.isEnableRainbowRoundBrackets) annotateUtil(element, holder, "(", ")", NAME_ROUND_BRACKETS)
@@ -40,7 +41,8 @@ object RainbowUtils {
 	private val leftBracketsSet = setOf("(", "[", "{", "<")
 	private val rightBracketsSet = setOf(")", "]", "}", ">")
 	
-	val settings = RainbowSettings.instance
+	val settings
+		get() = RainbowSettings.instance
 	
 	private tailrec fun iterateChildren(
 		LEFT: String,

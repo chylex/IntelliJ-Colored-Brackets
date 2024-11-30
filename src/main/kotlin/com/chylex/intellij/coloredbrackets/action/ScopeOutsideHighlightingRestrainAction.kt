@@ -26,6 +26,8 @@ class ScopeOutsideHighlightingRestrainAction : AbstractScopeHighlightingAction()
 		val highlighters = LinkedList<RangeHighlighter>()
 		
 		val startOffset = rainbowInfo.startOffset
+		val hideByAnyKey = RainbowSettings.instance.pressAnyKeyToRemoveTheHighlightingEffects
+		
 		if (startOffset > 0) {
 			highlightManager.addRangeHighlight(
 				this,
@@ -33,7 +35,7 @@ class ScopeOutsideHighlightingRestrainAction : AbstractScopeHighlightingAction()
 				startOffset,
 				attributes, //create("ScopeOutsideHighlightingRestrainAction", attributes),
 				false, //hideByTextChange
-				RainbowSettings.instance.pressAnyKeyToRemoveTheHighlightingEffects, //hideByAnyKey
+				hideByAnyKey, //hideByAnyKey
 				highlighters
 			)
 		}
@@ -47,7 +49,7 @@ class ScopeOutsideHighlightingRestrainAction : AbstractScopeHighlightingAction()
 				lastOffset,
 				attributes, //create("ScopeOutsideHighlightingRestrainAction", attributes),
 				false, //hideByTextChange
-				RainbowSettings.instance.pressAnyKeyToRemoveTheHighlightingEffects, //hideByAnyKey
+				hideByAnyKey, //hideByAnyKey
 				highlighters
 			)
 		}

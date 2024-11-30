@@ -16,18 +16,21 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 	
 	override fun visit(element: PsiElement) {
 		val type = (element as? LeafPsiElement)?.elementType ?: return
-		val matching = filterPairs(type, element) ?: return
+		
+		val settings = RainbowSettings.instance
+		val processor = Processor(settings)
+		val matching = processor.filterPairs(type, element) ?: return
 		
 		val pair =
 			if (matching.size == 1) {
 				matching[0]
 			}
 			else {
-				matching.find { element.isValidBracket(it) }
+				matching.find { processor.isValidBracket(element, it) }
 			} ?: return
 		
-		val level = element.getBracketLevel(pair)
-		if (RainbowSettings.instance.isDoNOTRainbowifyTheFirstLevel) {
+		val level = processor.getBracketLevel(element, pair)
+		if (settings.isDoNOTRainbowifyTheFirstLevel) {
 			if (level >= 1) {
 				rainbowPairs(element, pair, level)
 			}
@@ -45,9 +48,9 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 		element.setHighlightInfo(element.parent, level, startElement, endElement)
 	}
 	
-	companion object {
+	private class Processor(private val settings: RainbowSettings) {
 		
-		private fun LeafPsiElement.getBracketLevel(pair: BracePair): Int = iterateBracketParents(parent, pair, -1)
+		fun getBracketLevel(element: LeafPsiElement, pair: BracePair): Int = iterateBracketParents(element.parent, pair, -1)
 		
 		private tailrec fun iterateBracketParents(element: PsiElement?, pair: BracePair, count: Int): Int {
 			if (element == null || element is PsiFile) {
@@ -55,7 +58,7 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 			}
 			
 			var nextCount = count
-			if (!RainbowSettings.instance.cycleCountOnAllBrackets) {
+			if (!settings.cycleCountOnAllBrackets) {
 				if (element.haveBrackets(
 						{ it.elementType() == pair.leftBraceType },
 						{ it.elementType() == pair.rightBraceType })
@@ -109,7 +112,7 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 			}
 			
 			//For https://github.com/izhangzhihao/intellij-rainbow-brackets/issues/830
-			if (RainbowSettings.instance.doNOTRainbowifyTemplateString) {
+			if (settings.doNOTRainbowifyTemplateString) {
 				if (left?.prevSibling?.textMatches("$") == true) return false
 			}
 			
@@ -120,18 +123,18 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 			return (this as? LeafPsiElement)?.elementType
 		}
 		
-		private fun LeafPsiElement.isValidBracket(pair: BracePair): Boolean {
-			val pairType = when (elementType) {
+		fun isValidBracket(element: LeafPsiElement, pair: BracePair): Boolean {
+			val pairType = when (element.elementType) {
 				pair.leftBraceType  -> pair.rightBraceType
 				pair.rightBraceType -> pair.leftBraceType
 				else                -> return false
 			}
 			
 			return if (pairType == pair.leftBraceType) {
-				checkBracePair(this, parent.firstChild, pairType, PsiElement::getNextSibling)
+				checkBracePair(element, element.parent.firstChild, pairType, PsiElement::getNextSibling)
 			}
 			else {
-				checkBracePair(this, parent.lastChild, pairType, PsiElement::getPrevSibling)
+				checkBracePair(element, element.parent.lastChild, pairType, PsiElement::getPrevSibling)
 			}
 		}
 		
@@ -153,25 +156,25 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 			return false
 		}
 		
-		private fun filterPairs(type: IElementType, element: LeafPsiElement): List<BracePair>? {
+		fun filterPairs(type: IElementType, element: LeafPsiElement): List<BracePair>? {
 			val pairs = element.language.bracePairs ?: return null
 			val filterBraceType = pairs[type.toString()]
 			return when {
-				filterBraceType.isNullOrEmpty()                                  -> {
+				filterBraceType.isNullOrEmpty()                             -> {
 					null
 				}
 				// https://github.com/izhangzhihao/intellij-rainbow-brackets/issues/198
-				element.javaClass.simpleName == "OCMacroForeignLeafElement"      -> {
+				element.javaClass.simpleName == "OCMacroForeignLeafElement" -> {
 					null
 				}
 				
-				RainbowSettings.instance.isDoNOTRainbowifyBracketsWithoutContent -> {
+				settings.isDoNOTRainbowifyBracketsWithoutContent            -> {
 					filterBraceType
 						.filterNot { it.leftBraceType == type && element.nextSibling?.elementType() == it.rightBraceType }
 						.filterNot { it.rightBraceType == type && element.prevSibling?.elementType() == it.leftBraceType }
 				}
 				
-				else                                                             -> {
+				else                                                        -> {
 					filterBraceType
 				}
 			}
