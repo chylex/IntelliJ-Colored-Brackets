@@ -1,23 +1,54 @@
 @file:Suppress("ConvertLambdaToReference")
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.io.path.Path
 
 plugins {
-	kotlin("jvm") version "1.9.21"
-	id("org.jetbrains.intellij") version "1.17.4"
+	kotlin("jvm")
+	id("org.jetbrains.intellij")
 }
 
 group = "com.chylex.intellij.coloredbrackets"
 version = "0.0.1"
 
-repositories {
-	mavenCentral()
+allprojects {
+	apply(plugin = "org.jetbrains.kotlin.jvm")
+	apply(plugin = "org.jetbrains.intellij")
+	
+	repositories {
+		mavenCentral()
+	}
+
+	intellij {
+		version.set("2023.3")
+		updateSinceUntilBuild.set(false)
+	}
+	
+	kotlin {
+		jvmToolchain(17)
+	}
+	
+	tasks.withType<KotlinCompile> {
+		kotlinOptions.freeCompilerArgs = listOf(
+			"-Xjvm-default=all"
+		)
+	}
+}
+
+subprojects {
+	tasks.buildSearchableOptions {
+		enabled = false
+	}
+}
+
+idea {
+	module {
+		excludeDirs.add(file("gradle"))
+	}
 }
 
 intellij {
 	type.set("IU")
-	version.set("2023.3")
-	updateSinceUntilBuild.set(false)
 	
 	plugins.set(
 		listOf(
@@ -42,13 +73,7 @@ intellij {
 	)
 }
 
-kotlin {
-	jvmToolchain(17)
-}
-
 dependencies {
-	compileOnly(fileTree("libs"))
-	
 	testImplementation("junit:junit:4.13.2")
 	testImplementation("io.kotest:kotest-assertions-core:5.8.0") {
 		exclude(group = "org.jetbrains.kotlin")
@@ -63,8 +88,42 @@ tasks.test {
 	useJUnit()
 }
 
-tasks.withType<KotlinCompile> {
-	kotlinOptions.freeCompilerArgs = listOf(
-		"-Xjvm-default=all"
-	)
+tasks.buildPlugin {
+	val projectName = rootProject.name
+	val instrumentedJarName = "instrumented-$projectName-$version"
+	
+	for (ide in listOf("clion", "rider")) {
+		val task = project(":$ide").tasks.buildPlugin
+		
+		dependsOn(task)
+		
+		from(task.map { it.outputs.files.map(::zipTree) }) {
+			include("$ide/lib/instrumented-$ide.jar")
+			into("lib")
+			
+			eachFile {
+				val newName = name.replace("instrumented-", "${instrumentedJarName}-")
+				val newPath = relativePath.segments.dropLast(3).plus(newName)
+				relativePath = RelativePath(true, *newPath.toTypedArray())
+			}
+			
+			includeEmptyDirs = false
+		}
+	}
+	
+	doLast {
+		val expectedPaths = listOf(
+			Path(projectName, "lib", "instrumented-$projectName-$version-clion.jar"),
+			Path(projectName, "lib", "instrumented-$projectName-$version-rider.jar"),
+			Path(projectName, "lib", "instrumented-$projectName-$version.jar"),
+			Path(projectName, "lib", "searchableOptions-$version.jar"),
+		)
+		
+		val jarFiles = zipTree(outputs.files.singleFile)
+		
+		for (expectedPath in expectedPaths) {
+			val found = jarFiles.find { it.toPath().endsWith(expectedPath) }
+			checkNotNull(found) { "Expected path not found: $expectedPath" }
+		}
+	}
 }

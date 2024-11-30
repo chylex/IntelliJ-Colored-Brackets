@@ -7,9 +7,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
-import com.jetbrains.rider.ideaInterop.fileTypes.csharp.lexer.CSharpTokenType.LPARENTH
-import com.jetbrains.rider.ideaInterop.fileTypes.csharp.lexer.CSharpTokenType.RPARENTH
-import com.jetbrains.rider.ideaInterop.fileTypes.csharp.psi.CSharpDummyNode
+import com.jetbrains.rider.languages.fileTypes.csharp.kotoparser.lexer.CSharpTokenType
+import com.jetbrains.rider.languages.fileTypes.csharp.psi.CSharpDummyNode
 
 class CSharpRainbowVisitor : RainbowHighlightVisitor() {
 	
@@ -48,8 +47,8 @@ class CSharpRainbowVisitor : RainbowHighlightVisitor() {
 	
 	companion object {
 		val map = mapOf(
-			LPARENTH to BracePair(LPARENTH, RPARENTH, true),
-			RPARENTH to BracePair(LPARENTH, RPARENTH, true),
+			CSharpTokenType.LPARENTH to BracePair(CSharpTokenType.LPARENTH, CSharpTokenType.RPARENTH, true),
+			CSharpTokenType.RPARENTH to BracePair(CSharpTokenType.LPARENTH, CSharpTokenType.RPARENTH, true),
 			//LT to BracePair(LT, GT, true),
 			//GT to BracePair(LT, GT, true),
 		)
