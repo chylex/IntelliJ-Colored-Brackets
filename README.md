@@ -5,4 +5,5 @@ This is a fork of the [🌈Rainbow Brackets](https://github.com/izhangzhihao/int
 ## Key Changes
 
 - Support for CLion and Rider
+- Support for Settings Sync
 - Fixed service initialization warnings reported by 2024.2+

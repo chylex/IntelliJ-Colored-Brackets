@@ -2,12 +2,13 @@ package com.chylex.intellij.coloredbrackets.settings
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.SettingsCategory
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil.copyBean
 import org.jetbrains.annotations.Nullable
 
-@State(name = "ColoredBracketsSettings", storages = [Storage("colored_brackets.xml")])
+@State(name = "ColoredBracketsSettings", storages = [Storage("colored_brackets.xml")], category = SettingsCategory.UI)
 class RainbowSettings : PersistentStateComponent<RainbowSettings> {
 	/**
 	 * default value
