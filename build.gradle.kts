@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.chylex.intellij.coloredbrackets"
-version = "0.0.1"
+version = "1.0.0"
 
 allprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
