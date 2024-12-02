@@ -1,0 +1,6 @@
+<idea-plugin>
+  <extensions defaultExtensionNs="com.chylex.coloredbrackets">
+    <bracePairProvider language="C++"
+                       implementationClass="com.chylex.intellij.coloredbrackets.provider.CppBracePairProvider" />
+  </extensions>
+</idea-plugin>
