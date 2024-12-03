@@ -1,8 +1,10 @@
 package com.chylex.intellij.coloredbrackets.settings
 
 import com.chylex.intellij.coloredbrackets.settings.form.RainbowSettingsForm
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer
 import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.options.SearchableConfigurable
+import com.intellij.openapi.project.ProjectManager
 import org.jetbrains.annotations.Nls
 import javax.swing.JComponent
 
@@ -45,6 +47,10 @@ class RainbowConfigurable : SearchableConfigurable {
 		settings.doNOTRainbowifyBigFiles = settingsForm?.doNOTRainbowifyBigFiles() ?: true
 		settings.bigFilesLinesThreshold = settingsForm?.bigFilesLinesThreshold() ?: 1000
 		settings.rainbowifyPythonKeywords = settingsForm?.rainbowifyPythonKeywords() ?: false
+		
+		ProjectManager.getInstanceIfCreated()?.openProjects?.forEach {
+			DaemonCodeAnalyzer.getInstance(it).restart()
+		}
 	}
 	
 	override fun reset() {
