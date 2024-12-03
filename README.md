@@ -4,6 +4,9 @@ This is a fork of the [🌈Rainbow Brackets](https://github.com/izhangzhihao/int
 
 ## Key Changes
 
-- Support for CLion and Rider
+- Support for C# (Rider)
+- Support for C++ (Rider, CLion, CLion Nova)
 - Support for Settings Sync
+- Improved highlighting performance
+- Increased default setting for maximum line count from 1K to 100K
 - Fixed service initialization warnings reported by 2024.2+

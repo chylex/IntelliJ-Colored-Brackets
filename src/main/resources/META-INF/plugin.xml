@@ -8,16 +8,26 @@
     <br><br>
     <b>Key Changes</b>
     <ul>
-      <li>Support for CLion and Rider</li>
+      <li>Support for C# (Rider)</li>
+      <li>Support for C++ (Rider, CLion, CLion Nova)</li>
       <li>Support for Settings Sync</li>
+      <li>Improved highlighting performance</li>
+      <li>Increased default setting for maximum line count from 1K to 100K</li>
       <li>Fixed service initialization warnings reported by 2024.2+</li>
     </ul>
   ]]></description>
   
   <change-notes><![CDATA[
+    <b>1.1.0</b>
+    <ul>
+      <li>Added support for C++ in Rider and CLion Nova</li>
+      <li>Fixed broken option to not color parentheses without content in C#</li>
+      <li>Improved highlighting performance</li>
+      <li>Increased default setting for maximum line count from 1K to 100K</li>
+    </ul>
     <b>1.0.0</b>
     <ul>
-      <li>Added support for CLion and Rider</li>
+      <li>Restored support for CLion and Rider</li>
       <li>Added support for Settings Sync</li>
       <li>Fixed service initialization warnings reported by IJ 2024.2+</li>
     </ul>
