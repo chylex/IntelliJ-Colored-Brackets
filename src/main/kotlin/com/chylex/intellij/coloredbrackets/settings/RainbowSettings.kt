@@ -38,7 +38,7 @@ class RainbowSettings : PersistentStateComponent<RainbowSettings> {
 	var rainbowifyTagNameInXML = false
 	var doNOTRainbowifyTemplateString = false
 	var doNOTRainbowifyBigFiles = true
-	var bigFilesLinesThreshold = 1000
+	var bigFilesLinesThreshold = 100_000
 	
 	var languageBlacklist: Set<String> = setOf("hocon", "mxml")
 	
