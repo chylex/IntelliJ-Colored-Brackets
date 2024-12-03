@@ -9,28 +9,31 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.tree.IElementType
+import it.unimi.dsi.fastutil.objects.Object2ByteOpenHashMap
 
 class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 	
 	override fun clone(): HighlightVisitor = DefaultRainbowVisitor()
 	
+	private var processor: Processor? = null
+	
+	override fun onBeforeAnalyze(file: PsiFile, updateWholeFile: Boolean) {
+		processor = Processor(RainbowSettings.instance)
+	}
+	
 	override fun visit(element: PsiElement) {
 		val type = (element as? LeafPsiElement)?.elementType ?: return
 		
-		val settings = RainbowSettings.instance
-		val processor = Processor(settings)
+		val processor = processor!!
 		val matching = processor.filterPairs(type, element) ?: return
 		
-		val pair =
-			if (matching.size == 1) {
-				matching[0]
-			}
-			else {
-				matching.find { processor.isValidBracket(element, it) }
-			} ?: return
+		val pair = when (matching.size) {
+			1    -> matching[0]
+			else -> matching.find { processor.isValidBracket(element, it) } ?: return
+		}
 		
 		val level = processor.getBracketLevel(element, pair)
-		if (settings.isDoNOTRainbowifyTheFirstLevel) {
+		if (processor.settings.isDoNOTRainbowifyTheFirstLevel) {
 			if (level >= 1) {
 				rainbowPairs(element, pair, level)
 			}
@@ -42,13 +45,35 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 		}
 	}
 	
+	override fun onAfterAnalyze() {
+		processor = null
+	}
+	
 	private fun rainbowPairs(element: LeafPsiElement, pair: BracePair, level: Int) {
 		val startElement = element.takeIf { it.elementType == pair.leftBraceType }
 		val endElement = element.takeIf { it.elementType == pair.rightBraceType }
 		element.setHighlightInfo(element.parent, level, startElement, endElement)
 	}
 	
-	private class Processor(private val settings: RainbowSettings) {
+	private class Processor(val settings: RainbowSettings) {
+		
+		private companion object {
+			private const val CACHE_MISS = (-1).toByte()
+		}
+		
+		private data class HasBracketsCacheKey(val element: PsiElement, val pair: BracePair) {
+			private val hashCode = (31 * System.identityHashCode(element)) + System.identityHashCode(pair)
+			
+			override fun equals(other: Any?): Boolean {
+				return other is HasBracketsCacheKey && element === other.element && pair === other.pair
+			}
+			
+			override fun hashCode(): Int {
+				return hashCode
+			}
+		}
+		
+		private val hasBracketsCache = Object2ByteOpenHashMap<HasBracketsCacheKey>().apply { defaultReturnValue(CACHE_MISS) }
 		
 		fun getBracketLevel(element: LeafPsiElement, pair: BracePair): Int = iterateBracketParents(element.parent, pair, -1)
 		
@@ -59,17 +84,19 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 			
 			var nextCount = count
 			if (!settings.cycleCountOnAllBrackets) {
-				if (element.haveBrackets(
-						{ it.elementType() == pair.leftBraceType },
-						{ it.elementType() == pair.rightBraceType })
+				if (element.hasBrackets(
+						pair,
+						{ it.elementType == pair.leftBraceType },
+						{ it.elementType == pair.rightBraceType })
 				) {
 					nextCount++
 				}
 			}
 			else {
-				if (element.haveBrackets(
-						{ element.language.braceTypeSet.contains(it.elementType()) },
-						{ element.language.braceTypeSet.contains(it.elementType()) })
+				if (element.hasBrackets(
+						pair,
+						{ element.language.braceTypeSet.contains(it.elementType) },
+						{ element.language.braceTypeSet.contains(it.elementType) })
 				) {
 					nextCount++
 				}
@@ -78,49 +105,59 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 			return iterateBracketParents(element.parent, pair, nextCount)
 		}
 		
-		private inline fun PsiElement.haveBrackets(
-			checkLeft: (PsiElement) -> Boolean,
-			checkRight: (PsiElement) -> Boolean,
+		private inline fun PsiElement.hasBrackets(
+			pair: BracePair,
+			checkLeft: (LeafPsiElement) -> Boolean,
+			checkRight: (LeafPsiElement) -> Boolean,
 		): Boolean {
 			if (this is LeafPsiElement) {
 				return false
 			}
 			
-			var findLeftBracket = false
-			var findRightBracket = false
-			var left: PsiElement? = firstChild
-			var right: PsiElement? = lastChild
-			while (left != right && (!findLeftBracket || !findRightBracket)) {
-				val needBreak = left == null || left.nextSibling == right
+			val cacheKey = HasBracketsCacheKey(this, pair)
+			val cacheValue = hasBracketsCache.getByte(cacheKey)
+			if (cacheValue != CACHE_MISS) {
+				return cacheValue == 1.toByte()
+			}
+			
+			val hasBrackets = run {
+				var findLeftBracket = false
+				var findRightBracket = false
+				var left: PsiElement? = firstChild
+				var right: PsiElement? = lastChild
 				
-				if (left is LeafPsiElement && checkLeft(left)) {
-					findLeftBracket = true
+				while (left != right && (!findLeftBracket || !findRightBracket)) {
+					val needBreak = left == null || left.nextSibling == right
+					
+					if (left is LeafPsiElement && checkLeft(left)) {
+						findLeftBracket = true
+					}
+					else {
+						left = left?.nextSibling
+					}
+					if (right is LeafPsiElement && checkRight(right)) {
+						findRightBracket = true
+					}
+					else {
+						right = right?.prevSibling
+					}
+					
+					if (needBreak) {
+						break
+					}
+				}
+				
+				// For https://github.com/izhangzhihao/intellij-rainbow-brackets/issues/830
+				if (settings.doNOTRainbowifyTemplateString && left?.prevSibling?.textMatches("$") == true) {
+					false
 				}
 				else {
-					left = left?.nextSibling
-				}
-				if (right is LeafPsiElement && checkRight(right)) {
-					findRightBracket = true
-				}
-				else {
-					right = right?.prevSibling
-				}
-				
-				if (needBreak) {
-					break
+					findLeftBracket && findRightBracket
 				}
 			}
 			
-			//For https://github.com/izhangzhihao/intellij-rainbow-brackets/issues/830
-			if (settings.doNOTRainbowifyTemplateString) {
-				if (left?.prevSibling?.textMatches("$") == true) return false
-			}
-			
-			return findLeftBracket && findRightBracket
-		}
-		
-		private fun PsiElement.elementType(): IElementType? {
-			return (this as? LeafPsiElement)?.elementType
+			hasBracketsCache.put(cacheKey, if (hasBrackets) 1.toByte() else 0.toByte())
+			return hasBrackets
 		}
 		
 		fun isValidBracket(element: LeafPsiElement, pair: BracePair): Boolean {
@@ -160,24 +197,21 @@ class DefaultRainbowVisitor : RainbowHighlightVisitor() {
 			val pairs = element.language.bracePairs ?: return null
 			val filterBraceType = pairs[type.toString()]
 			return when {
-				filterBraceType.isNullOrEmpty()                             -> {
-					null
-				}
+				filterBraceType.isNullOrEmpty()                             -> null
+				
 				// https://github.com/izhangzhihao/intellij-rainbow-brackets/issues/198
-				element.javaClass.simpleName == "OCMacroForeignLeafElement" -> {
-					null
-				}
+				element.javaClass.simpleName == "OCMacroForeignLeafElement" -> null
 				
-				settings.isDoNOTRainbowifyBracketsWithoutContent            -> {
-					filterBraceType
-						.filterNot { it.leftBraceType == type && element.nextSibling?.elementType() == it.rightBraceType }
-						.filterNot { it.rightBraceType == type && element.prevSibling?.elementType() == it.leftBraceType }
-				}
+				settings.isDoNOTRainbowifyBracketsWithoutContent            -> filterBraceType
+					.filterNot { it.leftBraceType == type && element.nextSibling?.elementType() == it.rightBraceType }
+					.filterNot { it.rightBraceType == type && element.prevSibling?.elementType() == it.leftBraceType }
 				
-				else                                                        -> {
-					filterBraceType
-				}
+				else                                                        -> filterBraceType
 			}
+		}
+		
+		private fun PsiElement.elementType(): IElementType? {
+			return (this as? LeafPsiElement)?.elementType
 		}
 	}
 }
