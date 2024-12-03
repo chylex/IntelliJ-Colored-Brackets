@@ -69,12 +69,12 @@ object BracePairs {
 						}
 					}
 				
-				language.displayName to braceMap
+				language.id to braceMap
 			}
 			.toMap()
 	}
 	
-	fun getBracePairs(language: Language): MutableMap<String, MutableList<BracePair>>? = bracePairs.value[language.displayName]
+	fun getBracePairs(language: Language): MutableMap<String, MutableList<BracePair>>? = bracePairs.value[language.id]
 	
 	private fun getBraceTypeSetOf(language: Language): Set<IElementType> = getBracePairs(language)?.values?.flatten()?.map { listOf(it.leftBraceType, it.rightBraceType) }?.flatten()?.toSet() ?: emptySet()
 	
