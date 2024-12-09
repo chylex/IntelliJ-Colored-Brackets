@@ -8,7 +8,6 @@ import com.intellij.ide.actions.ToggleZenModeAction
 import com.intellij.lang.LanguageParserDefinitions
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.IndentGuideDescriptor
-import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.editor.markup.HighlighterTargetArea
 import com.intellij.openapi.editor.markup.MarkupModel
@@ -35,11 +34,9 @@ import java.util.Collections
  * */
 class RainbowIndentsPass internal constructor(
 	project: Project,
-	editor: Editor,
+	private val myEditor: Editor,
 	private val myFile: PsiFile,
-) : TextEditorHighlightingPass(project, editor.document, false), DumbAware {
-	
-	private val myEditor: EditorEx = editor as EditorEx
+) : TextEditorHighlightingPass(project, myEditor.document, false), DumbAware {
 	
 	@Volatile
 	private var myRanges = emptyList<TextRange>()
