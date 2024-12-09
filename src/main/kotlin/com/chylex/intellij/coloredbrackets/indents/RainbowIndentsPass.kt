@@ -22,8 +22,8 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.TokenSet
 import com.intellij.util.DocumentUtil
-import com.intellij.util.containers.IntStack
 import com.intellij.util.text.CharArrayUtil
+import it.unimi.dsi.fastutil.ints.IntArrayList
 import java.lang.StrictMath.abs
 import java.lang.StrictMath.min
 import java.util.Collections
@@ -148,8 +148,8 @@ class RainbowIndentsPass internal constructor(
 		calculator.calculate()
 		val lineIndents = calculator.lineIndents
 		
-		val lines = IntStack()
-		val indents = IntStack()
+		val lines = IntArrayList()
+		val indents = IntArrayList()
 		
 		lines.push(0)
 		indents.push(0)
@@ -158,10 +158,10 @@ class RainbowIndentsPass internal constructor(
 			ProgressManager.checkCanceled()
 			val curIndent = abs(lineIndents[line])
 			
-			while (!indents.empty() && curIndent <= indents.peek()) {
+			while (!indents.isEmpty && curIndent <= indents.peekInt(0)) {
 				ProgressManager.checkCanceled()
-				val level = indents.pop()
-				val startLine = lines.pop()
+				val level = indents.popInt()
+				val startLine = lines.popInt()
 				if (level > 0) {
 					for (i in startLine until line) {
 						if (level != abs(lineIndents[i])) {
@@ -181,10 +181,10 @@ class RainbowIndentsPass internal constructor(
 			}
 		}
 		
-		while (!indents.empty()) {
+		while (!indents.isEmpty) {
 			ProgressManager.checkCanceled()
-			val level = indents.pop()
-			val startLine = lines.pop()
+			val level = indents.popInt()
+			val startLine = lines.popInt()
 			if (level > 0) {
 				descriptors.add(createDescriptor(level, startLine, document.lineCount, lineIndents))
 			}
@@ -204,38 +204,12 @@ class RainbowIndentsPass internal constructor(
 		return IndentGuideDescriptor(level, sLine, endLine)
 	}
 	
-	/*
-	private fun findCodeConstructStart(startLine: Int): Int? {
-		val document = myEditor.document
-		val text = document.immutableCharSequence
-		val lineStartOffset = document.getLineStartOffset(startLine)
-		val firstNonWsOffset = CharArrayUtil.shiftForward(text, lineStartOffset, " \t")
-		val type = PsiUtilBase.getPsiFileAtOffset(myFile, firstNonWsOffset).fileType
-		val language = PsiUtilCore.getLanguageAtOffset(myFile, firstNonWsOffset)
-		val braceMatcher = BraceMatchingUtil.getBraceMatcher(type, language)
-		val iterator = myEditor.highlighter.createIterator(firstNonWsOffset)
-		return if (braceMatcher.isLBraceToken(iterator, text, type)) {
-			braceMatcher.getCodeConstructStart(myFile, firstNonWsOffset)
-		} else null
-	}
-
-
-	private fun findCodeConstructStartLine(startLine: Int): Int {
-		val codeConstructStart = findCodeConstructStart(startLine)
-		return if (codeConstructStart != null) myEditor.document.getLineNumber(codeConstructStart) else startLine
-	}
-	*/
-	
 	private inner class IndentsCalculator {
 		val myComments: MutableMap<String, TokenSet> = HashMap()
 		val lineIndents = IntArray(document.lineCount) // negative value means the line is empty (or contains a comment) and indent
 		
 		// (denoted by absolute value) was deduced from enclosing non-empty lines
-		val myChars: CharSequence
-		
-		init {
-			myChars = document.charsSequence
-		}
+		val myChars = document.charsSequence
 		
 		/**
 		 * Calculates line indents for the [target document][.myDocument].
