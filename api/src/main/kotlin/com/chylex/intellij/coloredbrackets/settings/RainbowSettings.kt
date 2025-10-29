@@ -5,7 +5,7 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.SettingsCategory
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.util.xmlb.XmlSerializerUtil.copyBean
+import com.intellij.util.xmlb.XmlSerializerUtil
 import org.jetbrains.annotations.Nullable
 
 @State(name = "ColoredBracketsSettings", storages = [Storage("colored_brackets.xml")], category = SettingsCategory.UI)
@@ -51,7 +51,7 @@ class RainbowSettings : PersistentStateComponent<RainbowSettings> {
 	override fun getState() = this
 	
 	override fun loadState(state: RainbowSettings) {
-		copyBean(state, this)
+		XmlSerializerUtil.copyBean(state, this)
 	}
 	
 	companion object {

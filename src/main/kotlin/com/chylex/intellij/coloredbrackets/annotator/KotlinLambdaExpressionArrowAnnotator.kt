@@ -16,7 +16,7 @@ class KotlinLambdaExpressionArrowAnnotator : Annotator {
 		if ((element as? LeafPsiElement)?.elementType == KtTokens.ARROW) {
 			RainbowInfo.RAINBOW_INFO_KEY[element.parent]?.color?.let {
 				holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-					.range(element)
+					.range(element as PsiElement) // Cast necessary due to overload conflict in Kotlin 2 compiler.
 					.textAttributes(
 						com.chylex.intellij.coloredbrackets.util.create(
 							"rainbow-kotlin-arrow",

@@ -1,6 +1,7 @@
 package com.chylex.intellij.coloredbrackets
 
 import com.chylex.intellij.coloredbrackets.settings.RainbowSettings
+import com.chylex.intellij.coloredbrackets.util.create
 import com.chylex.intellij.coloredbrackets.util.memoize
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.codeInsight.daemon.impl.HighlightInfoType
@@ -137,7 +138,7 @@ object RainbowHighlighter {
 	}
 	
 	private fun genByOption(option: String, rainbowName: String, level: Int) =
-		com.chylex.intellij.coloredbrackets.util.create(
+		create(
 			"$rainbowName-$level",
 			TextAttributes(randomColor(option), null, null, null, 0)
 		)

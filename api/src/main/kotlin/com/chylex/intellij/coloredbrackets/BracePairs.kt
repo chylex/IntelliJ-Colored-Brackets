@@ -16,7 +16,7 @@ object BracePairs {
 	
 	private val providers = LanguageExtension<BracePairProvider>("com.chylex.coloredbrackets.bracePairProvider")
 	
-	private val bracePairs = lazy {
+	val bracePairs = lazy {
 		Language.getRegisteredLanguages()
 			.map { language ->
 				if (language is CompositeLanguage) {
@@ -74,15 +74,13 @@ object BracePairs {
 			.toMap()
 	}
 	
-	fun getBracePairs(language: Language): MutableMap<String, MutableList<BracePair>>? = bracePairs.value[language.id]
-	
-	private fun getBraceTypeSetOf(language: Language): Set<IElementType> = getBracePairs(language)?.values?.flatten()?.map { listOf(it.leftBraceType, it.rightBraceType) }?.flatten()?.toSet() ?: emptySet()
+	private fun getBraceTypeSetOf(language: Language): Set<IElementType> = language.bracePairs?.values?.flatten()?.map { listOf(it.leftBraceType, it.rightBraceType) }?.flatten()?.toSet() ?: emptySet()
 	
 	val braceTypeSet: (Language) -> Set<IElementType> = { language: Language -> getBraceTypeSetOf(language) }.memoize()
+	
+	inline val Language.bracePairs: MutableMap<String, MutableList<BracePair>>?
+		get() = BracePairs.bracePairs.value[this.id]
+	
+	inline val Language.braceTypeSet: Set<IElementType>
+		get() = BracePairs.braceTypeSet(this)
 }
-
-inline val Language.bracePairs: MutableMap<String, MutableList<BracePair>>?
-	get() = BracePairs.getBracePairs(this)
-
-inline val Language.braceTypeSet: Set<IElementType>
-	get() = BracePairs.braceTypeSet(this)

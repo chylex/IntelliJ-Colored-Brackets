@@ -1,7 +1,11 @@
-intellij {
-	type.set("RD")
-}
+val ideaVersion: String by project
 
 dependencies {
-	implementation(rootProject)
+	implementation(project(":api"))
+	
+	intellijPlatform {
+		rider(ideaVersion) {
+			useInstaller = false
+		}
+	}
 }

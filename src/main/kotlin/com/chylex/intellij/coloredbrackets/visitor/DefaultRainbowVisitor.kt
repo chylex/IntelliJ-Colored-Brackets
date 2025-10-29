@@ -1,7 +1,7 @@
 package com.chylex.intellij.coloredbrackets.visitor
 
-import com.chylex.intellij.coloredbrackets.bracePairs
-import com.chylex.intellij.coloredbrackets.braceTypeSet
+import com.chylex.intellij.coloredbrackets.BracePairs.bracePairs
+import com.chylex.intellij.coloredbrackets.BracePairs.braceTypeSet
 import com.chylex.intellij.coloredbrackets.settings.RainbowSettings
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor
 import com.intellij.lang.BracePair
