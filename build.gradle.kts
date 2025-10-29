@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.chylex.intellij.coloredbrackets"
-version = "1.2.0"
+version = "1.3.0"
 
 val ideaVersion = "2023.3"
 

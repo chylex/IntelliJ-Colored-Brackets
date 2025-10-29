@@ -18,6 +18,10 @@
   ]]></description>
   
   <change-notes><![CDATA[
+    <b>Version 1.3.0</b>
+    <ul>
+      <li>Fixed assertion error caused by missing read lock in indent guide renderer.</li>
+    </ul>
     <b>Version 1.2.0</b>
     <ul>
       <li>Fixed not re-highlighting open files after changing settings.</li>
