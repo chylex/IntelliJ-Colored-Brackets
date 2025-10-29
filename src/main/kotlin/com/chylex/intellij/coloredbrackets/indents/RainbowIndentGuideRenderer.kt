@@ -7,6 +7,7 @@ import com.chylex.intellij.coloredbrackets.util.findNextSibling
 import com.chylex.intellij.coloredbrackets.util.findPrevSibling
 import com.chylex.intellij.coloredbrackets.util.lineNumber
 import com.chylex.intellij.coloredbrackets.util.startOffset
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SoftWrap
@@ -165,24 +166,28 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 			val virtualFile = editor.virtualFile?.takeIf { it.isValid } ?: return null
 			val document = editor.document
 			val project = editor.project ?: return null
-			val psiFile = PsiManager.getInstance(project).findFile(virtualFile) ?: return null
-			var element = try {
-				psiFile.findElementAt(highlighter.endOffset)?.parent ?: return null
-			} catch (e: Throwable) {
-				return null
-			}
 			
-			var rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element]
-			if (rainbowInfo == null && psiFile is XmlFile && element !is XmlTag) {
-				element = PsiTreeUtil.findFirstParent(element, true, XML_TAG_PARENT_CONDITION) ?: return null
-				rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element] ?: return null
+			return ReadAction.compute<RainbowInfo, Throwable> {
+				val psiFile = PsiManager.getInstance(project).findFile(virtualFile) ?: return@compute null
+				var element = try {
+					psiFile.findElementAt(highlighter.endOffset)?.parent ?: return@compute null
+				} catch (_: Throwable) {
+					return@compute null
+				}
+				
+				var rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element]
+				if (rainbowInfo == null && psiFile is XmlFile && element !is XmlTag) {
+					element = PsiTreeUtil.findFirstParent(element, true, XML_TAG_PARENT_CONDITION) ?: return@compute null
+					rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element] ?: return@compute null
+				}
+				
+				if (!element.isValid || !checkBoundary(document, element, highlighter)) {
+					null
+				}
+				else {
+					rainbowInfo
+				}
 			}
-			
-			if (!element.isValid || !checkBoundary(document, element, highlighter)) {
-				return null
-			}
-			
-			return rainbowInfo
 		}
 		
 		/***
