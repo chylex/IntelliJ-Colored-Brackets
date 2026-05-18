@@ -43,26 +43,24 @@
   ]]></change-notes>
   
   <depends>com.intellij.modules.lang</depends>
-  <depends optional="true" config-file="kotlin-brackets.xml">org.jetbrains.kotlin</depends>
-  <depends optional="true" config-file="JSX.xml">JavaScript</depends>
-  <depends optional="true" config-file="dart-brackets.xml">Dart</depends>
-  <depends optional="true" config-file="groovy-brackets.xml">org.intellij.groovy</depends>
-  <depends optional="true" config-file="cpp-nova-brackets.xml">org.jetbrains.plugins.clion.radler</depends>
-  <depends optional="true" config-file="cpp-rider-brackets.xml">com.intellij.modules.rider</depends>
-  <depends optional="true" config-file="csharp-brackets.xml">com.intellij.modules.rider</depends>
-  <depends optional="true" config-file="intellij-haskell-annotator.xml">intellij.haskell</depends>
-  <depends optional="true" config-file="sql-brackets.xml">com.intellij.database</depends>
-  <depends optional="true" config-file="oc-brackets.xml">com.intellij.modules.clion</depends>
-  <depends optional="true" config-file="sh-brackets.xml">com.jetbrains.sh</depends>
-  <depends optional="true" config-file="php-brackets.xml">com.jetbrains.php</depends>
-  <depends optional="true" config-file="go-template-brackets.xml">org.jetbrains.plugins.go-template</depends>
-  <depends optional="true" config-file="jade-rainbow-visitor.xml">com.jetbrains.plugins.jade</depends>
-  <depends optional="true" config-file="python-brackets.xml">com.intellij.modules.python</depends>
+  <depends optional="true" config-file="plugin-clion-nova.xml">org.jetbrains.plugins.clion.radler</depends>
+  <depends optional="true" config-file="plugin-clion.xml">com.intellij.modules.clion</depends>
+  <depends optional="true" config-file="plugin-dart.xml">Dart</depends>
+  <depends optional="true" config-file="plugin-go-template.xml">org.jetbrains.plugins.go-template</depends>
+  <depends optional="true" config-file="plugin-groovy.xml">org.intellij.groovy</depends>
+  <depends optional="true" config-file="plugin-haskell.xml">intellij.haskell</depends>
+  <depends optional="true" config-file="plugin-jade.xml">com.jetbrains.plugins.jade</depends>
+  <depends optional="true" config-file="plugin-javascript.xml">JavaScript</depends>
+  <depends optional="true" config-file="plugin-kotlin.xml">org.jetbrains.kotlin</depends>
+  <depends optional="true" config-file="plugin-php.xml">com.jetbrains.php</depends>
+  <depends optional="true" config-file="plugin-python.xml">com.intellij.modules.python</depends>
+  <depends optional="true" config-file="plugin-rider.xml">com.intellij.modules.rider</depends>
+  <depends optional="true" config-file="plugin-sh.xml">com.jetbrains.sh</depends>
+  <depends optional="true" config-file="plugin-sql.xml">com.intellij.database</depends>
   
   <extensionPoints>
     <extensionPoint name="bracePairProvider" beanClass="com.intellij.lang.LanguageExtensionPoint" dynamic="true">
-      <with attribute="implementationClass"
-            implements="com.chylex.intellij.coloredbrackets.provider.BracePairProvider" />
+      <with attribute="implementationClass" implements="com.chylex.intellij.coloredbrackets.provider.BracePairProvider" />
     </extensionPoint>
   </extensionPoints>
   
@@ -71,12 +69,9 @@
     <highlightVisitor implementation="com.chylex.intellij.coloredbrackets.visitor.XmlRainbowVisitor" />
     
     <applicationConfigurable instance="com.chylex.intellij.coloredbrackets.settings.RainbowConfigurable" displayName="Colored Brackets" parentId="appearance" />
-    <applicationService
-            serviceImplementation="com.chylex.intellij.coloredbrackets.settings.RainbowSettings" />
-    <colorAndFontPanelFactory
-            implementation="com.chylex.intellij.coloredbrackets.settings.RainbowColorsPageFactory" />
-    <colorAndFontDescriptorProvider
-            implementation="com.chylex.intellij.coloredbrackets.settings.RainbowColorsPageFactory" />
+    <applicationService serviceImplementation="com.chylex.intellij.coloredbrackets.settings.RainbowSettings" />
+    <colorAndFontPanelFactory implementation="com.chylex.intellij.coloredbrackets.settings.RainbowColorsPageFactory" />
+    <colorAndFontDescriptorProvider implementation="com.chylex.intellij.coloredbrackets.settings.RainbowColorsPageFactory" />
     
     <additionalTextAttributes scheme="Default" file="colorSchemes/rainbow-color-default.xml" />
     <additionalTextAttributes scheme="Darcula" file="colorSchemes/rainbow-color-default-darcula.xml" />

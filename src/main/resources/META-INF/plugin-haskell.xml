@@ -1,0 +1,6 @@
+<idea-plugin>
+  <extensions defaultExtensionNs="com.intellij">
+    <annotator language="Haskell"
+               implementationClass="com.chylex.intellij.coloredbrackets.annotator.RainbowAnnotator" />
+  </extensions>
+</idea-plugin>
