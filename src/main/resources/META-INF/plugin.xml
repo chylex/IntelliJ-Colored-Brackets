@@ -48,7 +48,6 @@
   <depends optional="true" config-file="plugin-dart.xml">Dart</depends>
   <depends optional="true" config-file="plugin-go-template.xml">org.jetbrains.plugins.go-template</depends>
   <depends optional="true" config-file="plugin-groovy.xml">org.intellij.groovy</depends>
-  <depends optional="true" config-file="plugin-haskell.xml">intellij.haskell</depends>
   <depends optional="true" config-file="plugin-jade.xml">com.jetbrains.plugins.jade</depends>
   <depends optional="true" config-file="plugin-javascript.xml">JavaScript</depends>
   <depends optional="true" config-file="plugin-kotlin.xml">org.jetbrains.kotlin</depends>

@@ -6,9 +6,7 @@ import com.chylex.intellij.coloredbrackets.settings.RainbowSettings
 import com.chylex.intellij.coloredbrackets.util.memoizedFileExtension
 import com.intellij.codeInsight.daemon.impl.HighlightVisitor
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightInfoHolder
-import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.editor.colors.EditorColorsManager
-import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiDocumentManager
@@ -26,8 +24,7 @@ abstract class RainbowHighlightVisitor : HighlightVisitor {
 		return settings.isRainbowEnabled &&
 			checkForBigFile(file) &&
 			!settings.languageBlacklist.contains(file.fileType.name) &&
-			!settings.languageBlacklist.contains(memoizedFileExtension(file.name)) &&
-			fileIsNotHaskellOrIntelliJHaskellPluginNotEnabled(file.fileType.name)
+			!settings.languageBlacklist.contains(memoizedFileExtension(file.name))
 	}
 	
 	final override fun analyze(file: PsiFile, updateWholeFile: Boolean, holder: HighlightInfoHolder, action: Runnable): Boolean {
@@ -84,18 +81,10 @@ abstract class RainbowHighlightVisitor : HighlightVisitor {
 	}
 	
 	companion object {
-		private val isIntelliJHaskellEnabled: Boolean by lazy {
-			PluginManagerCore.getPlugin(
-				PluginId.getId("intellij.haskell")
-			)?.isEnabled ?: false
-		}
 		
 		fun checkForBigFile(file: PsiFile): Boolean =
 			!(RainbowSettings.instance.doNOTRainbowifyBigFiles &&
 				file.getLineCount() > RainbowSettings.instance.bigFilesLinesThreshold)
-		
-		private fun fileIsNotHaskellOrIntelliJHaskellPluginNotEnabled(fileType: String) =
-			fileType != "Haskell" || !isIntelliJHaskellEnabled
 		
 		private fun PsiElement.getLineCount(): Int {
 			try {
