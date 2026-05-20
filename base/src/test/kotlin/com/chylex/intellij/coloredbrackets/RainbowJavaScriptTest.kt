@@ -13,7 +13,7 @@ import org.intellij.lang.annotations.Language
 class RainbowJavaScriptTest : LightJavaCodeInsightFixtureTestCase() {
 	
 	fun testJavaScriptPluginEnabled() {
-		assertTrue(PluginManagerCore.getPlugin(PluginId.getId("JavaScript"))?.isEnabled!!)
+		assertTrue(PluginManagerCore.isLoaded(PluginId("JavaScript")))
 	}
 	
 	fun testIssue11() {
@@ -146,7 +146,7 @@ const element = ( <div> <h1>Hello, world!</h1> </div> );
 		)
 	}
 	
-	fun `for somehow, it just don't work "testIssue39"`() {
+	fun testIssue39() {
 		@Language("JavaScript") val code = """
     const html = '<div><div><div>Hello</div></div></div>'
                                 """.trimIndent()

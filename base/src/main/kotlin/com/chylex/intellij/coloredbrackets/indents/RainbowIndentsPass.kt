@@ -46,7 +46,7 @@ class RainbowIndentsPass internal constructor(
 	
 	override fun doCollectInformation(progress: ProgressIndicator) {
 		val stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT)
-		if (stamp != null && stamp.toLong() == nowStamp()) return
+		if (stamp != null && stamp == nowStamp()) return
 		
 		myDescriptors = buildDescriptors()
 		

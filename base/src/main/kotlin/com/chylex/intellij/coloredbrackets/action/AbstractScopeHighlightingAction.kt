@@ -35,7 +35,7 @@ abstract class AbstractScopeHighlightingAction : AnAction() {
 		val offset = editor.caretModel.offset
 		val rainbowInfo = psiFile.findRainbowInfoAt(offset) ?: return
 		val highlightManager = HighlightManager.getInstance(project)
-		val highlighters = editor.addHighlighter(highlightManager, rainbowInfo)
+		val highlighters = editor.addHighlighter(editor, highlightManager, rainbowInfo)
 		
 		editor.highlightingDisposer?.dispose()
 		if (highlighters.isNotEmpty()) {
@@ -47,6 +47,7 @@ abstract class AbstractScopeHighlightingAction : AnAction() {
 	}
 	
 	protected abstract fun Editor.addHighlighter(
+		editor: Editor,
 		highlightManager: HighlightManager,
 		rainbowInfo: RainbowInfo,
 	): Collection<RangeHighlighter>

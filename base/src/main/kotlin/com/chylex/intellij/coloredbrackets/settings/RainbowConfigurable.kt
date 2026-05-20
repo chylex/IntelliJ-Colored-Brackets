@@ -49,7 +49,7 @@ class RainbowConfigurable : SearchableConfigurable {
 		settings.rainbowifyPythonKeywords = settingsForm?.rainbowifyPythonKeywords() ?: false
 		
 		ProjectManager.getInstanceIfCreated()?.openProjects?.forEach {
-			DaemonCodeAnalyzer.getInstance(it).restart()
+			DaemonCodeAnalyzer.getInstance(it).restart(this)
 		}
 	}
 	

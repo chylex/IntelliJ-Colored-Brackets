@@ -1,6 +1,7 @@
 package com.chylex.intellij.coloredbrackets
 
 import com.chylex.intellij.coloredbrackets.settings.RainbowSettings
+import com.chylex.intellij.coloredbrackets.util.alphaBlend
 import com.chylex.intellij.coloredbrackets.util.create
 import com.chylex.intellij.coloredbrackets.util.memoize
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
@@ -55,6 +56,9 @@ object RainbowHighlighter {
 	private val angleBracketsRainbowColorKeys = lazy {
 		createRainbowAttributesKeys(KEY_ANGLE_BRACKETS, settings.numberOfColors)
 	}
+	
+	private val SCOPE_HIGHLIGHTING_KEY = TextAttributesKey.createTempTextAttributesKey("ColoredBrackets:ScopeHighlighting", TextAttributes.ERASE_MARKER)
+	private val SCOPE_OUTSIDE_HIGHLIGHTING_KEY = TextAttributesKey.createTempTextAttributesKey("ColoredBrackets:ScopeOutsideHighlighting", TextAttributes.ERASE_MARKER)
 	
 	private val rainbowElement: HighlightInfoType = HighlightInfoType
 		.HighlightInfoTypeImpl(HighlightSeverity.INFORMATION, DefaultLanguageHighlighterColors.CONSTANT)
@@ -225,5 +229,24 @@ object RainbowHighlighter {
 	
 	private fun EditorColorsScheme.setInherited(key: TextAttributesKey, inherited: Boolean) {
 		setAttributes(key, if (inherited) AbstractColorsScheme.INHERITED_ATTRS_MARKER else TextAttributes())
+	}
+	
+	fun updateScopeHighlightingAttributes(scheme: EditorColorsScheme, rainbowInfo: RainbowInfo): TextAttributesKey {
+		val defaultBackground = EditorColorsManager.getInstance().globalScheme.defaultBackground
+		val background = rainbowInfo.color.alphaBlend(defaultBackground, 0.2f)
+		val attributes = TextAttributes(null, background, rainbowInfo.color, EffectType.BOXED, Font.PLAIN)
+		
+		scheme.setAttributes(SCOPE_HIGHLIGHTING_KEY, attributes)
+		return SCOPE_HIGHLIGHTING_KEY
+	}
+	
+	fun updateScopeOutsideHighlightingAttributes(scheme: EditorColorsScheme): TextAttributesKey {
+		val defaultBackground = scheme.defaultBackground
+		val background = Color.GRAY.alphaBlend(defaultBackground, 0.05f)
+		val foreground = Color.GRAY.alphaBlend(defaultBackground, 0.55f)
+		val attributes = TextAttributes(foreground, background, background, EffectType.BOXED, Font.PLAIN)
+		
+		scheme.setAttributes(SCOPE_OUTSIDE_HIGHLIGHTING_KEY, attributes)
+		return SCOPE_OUTSIDE_HIGHLIGHTING_KEY
 	}
 }

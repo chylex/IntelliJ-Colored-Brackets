@@ -10,7 +10,7 @@ import org.jetbrains.plugins.ruby.ruby.lang.RubyFileType
 class RainbowRubyTest : LightJavaCodeInsightFixtureTestCase() {
 	
 	fun testRubyPluginEnabled() {
-		assertTrue(PluginManagerCore.getPlugin(PluginId.getId("org.jetbrains.plugins.ruby"))?.isEnabled!!)
+		assertTrue(PluginManagerCore.isLoaded(PluginId("org.jetbrains.plugins.ruby")))
 	}
 	
 	fun testRainbowForIssue53Part0() {
