@@ -1,7 +1,7 @@
 val ideaVersion: String by project
 
 dependencies {
-	implementation(project(":api"))
+	implementation(project(":base"))
 	
 	intellijPlatform {
 		clion(ideaVersion)
