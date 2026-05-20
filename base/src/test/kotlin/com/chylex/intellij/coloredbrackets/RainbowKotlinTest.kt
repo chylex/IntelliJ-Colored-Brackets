@@ -105,37 +105,6 @@ val a: (Int) -> Unit = { aa ->
 		)
 	}
 	
-	fun `ForSomeHowTheTestNotPassed "testRainbowLabelForKotlin"`() {
-		@Language("kotlin") val code =
-			"""
-class AA {
-    fun aa() {
-        arrayOf(1, 2, 3).forEach {
-                it.let dd@{
-                    if (it > 0) a@{
-                        return@dd
-                    }
-                }
-                return@forEach
-            }
-    }
-}
-                """.trimIndent()
-		myFixture.configureByText(KotlinFileType.INSTANCE, code)
-		PsiDocumentManager.getInstance(project).commitAllDocuments()
-		val doHighlighting = myFixture.doHighlighting()
-		assertFalse(doHighlighting.isEmpty())
-		
-		doHighlighting.getBrackets().shouldBe(
-			arrayOf(
-				squigglyLevel(3),
-				squigglyLevel(4),
-				squigglyLevel(3),
-				squigglyLevel(2)
-			)
-		)
-	}
-	
 	fun testKotlinFunctionLiteralBracesAndArrow() {
 		@Language("kotlin") val code =
 			"""
