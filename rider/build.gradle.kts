@@ -7,5 +7,7 @@ dependencies {
 		rider(ideaVersion) {
 			useInstaller = false
 		}
+		
+		bundledModule("intellij.rider.cpp.core.languages")
 	}
 }

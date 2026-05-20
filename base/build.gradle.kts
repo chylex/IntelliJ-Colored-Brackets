@@ -1,4 +1,6 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.extensions.excludeCoroutines
+import org.jetbrains.intellij.platform.gradle.extensions.excludeKotlinStdlib
 
 val ideaVersion: String by project
 
@@ -16,19 +18,24 @@ dependencies {
 		bundledPlugin("org.jetbrains.kotlin")
 		bundledPlugin("org.jetbrains.plugins.yaml")
 		
-		plugin("Dart", "233.11799.172")                              // https://plugins.jetbrains.com/plugin/6351-dart/versions/stable
-		plugin("PythonCore", "233.11799.300")                        // https://plugins.jetbrains.com/plugin/631-python/versions
-		plugin("com.jetbrains.php", "233.11799.300")                 // https://plugins.jetbrains.com/plugin/6610-php/versions
-		plugin("com.jetbrains.sh", "233.11799.165")                  // https://plugins.jetbrains.com/plugin/13122-shell-script/versions
-		plugin("org.intellij.scala", "2023.3.19")                    // https://plugins.jetbrains.com/plugin/1347-scala/versions
-		plugin("org.jetbrains.plugins.go-template", "233.11799.172") // https://plugins.jetbrains.com/plugin/10581-go-template/versions
-		plugin("org.jetbrains.plugins.ruby", "233.11799.300")        // https://plugins.jetbrains.com/plugin/1293-ruby/versions
+		compatiblePlugin("PythonCore")
+		compatiblePlugin("com.jetbrains.php")
+		compatiblePlugin("com.jetbrains.plugins.jade")
+		compatiblePlugin("com.jetbrains.sh")
+		compatiblePlugin("org.intellij.scala")
+		compatiblePlugin("org.jetbrains.plugins.go-template")
+		compatiblePlugin("org.jetbrains.plugins.ruby")
 		
+		plugin("Dart:504.0.0") // https://plugins.jetbrains.com/plugin/6351-dart/versions/stable
+		
+		testFramework(TestFrameworkType.Platform)
 		testFramework(TestFrameworkType.Plugin.Java)
+		testFramework(TestFrameworkType.Plugin.JavaScript)
 	}
 	
 	testImplementation("junit:junit:4.13.2")
 	testImplementation("io.kotest:kotest-assertions-core:5.8.0") {
-		exclude(group = "org.jetbrains.kotlin")
+		excludeKotlinStdlib()
+		excludeCoroutines()
 	}
 }

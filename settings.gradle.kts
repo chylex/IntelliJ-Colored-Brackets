@@ -2,7 +2,7 @@ rootProject.name = "ColoredBrackets"
 
 pluginManagement {
 	plugins {
-		kotlin("jvm") version "1.9.21"
+		kotlin("jvm") version "2.2.20"
 		id("org.jetbrains.intellij.platform") version "2.18.1"
 	}
 }
