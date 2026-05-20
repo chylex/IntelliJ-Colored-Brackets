@@ -8,7 +8,7 @@ plugins {
 group = "com.chylex.intellij.coloredbrackets"
 version = "1.3.0"
 
-val ideaVersion = "2023.3"
+val ideaVersion = "2025.3"
 
 allprojects {
 	apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -33,7 +33,7 @@ allprojects {
 		
 		pluginConfiguration {
 			ideaVersion {
-				sinceBuild.set("233")
+				sinceBuild.set("253")
 				untilBuild.set(provider { null })
 			}
 		}

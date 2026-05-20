@@ -1,7 +1,7 @@
 package com.chylex.intellij.coloredbrackets
 
 import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.lang.ecmascript6.JSXHarmonyFileType
+import com.intellij.lang.javascript.JSXFileType
 import com.intellij.lang.javascript.JavaScriptFileType
 import com.intellij.lang.javascript.TypeScriptFileType
 import com.intellij.openapi.extensions.PluginId
@@ -24,7 +24,7 @@ const _ = require('lodash') || false
 const moment = require('moment')
                             """.trimIndent()
 		
-		myFixture.configureByText(JavaScriptFileType.INSTANCE, code)
+		myFixture.configureByText(JavaScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
@@ -47,7 +47,7 @@ const moment = require('moment')
 console.log(a > b)
 console.log(a == b)
                             """.trimIndent()
-		myFixture.configureByText(JavaScriptFileType.INSTANCE, code)
+		myFixture.configureByText(JavaScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
@@ -68,7 +68,7 @@ console.log(a == b)
 		
 		@Language("JavaScript") val code = "open (\$" + "{f})\n" + "open (\$" + "{f} )"
 		
-		myFixture.configureByText(JavaScriptFileType.INSTANCE, code)
+		myFixture.configureByText(JavaScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
@@ -102,7 +102,7 @@ if ((a.field_detail && a.is) ||
 
                             """.trimIndent()
 		
-		myFixture.configureByText(JavaScriptFileType.INSTANCE, code)
+		myFixture.configureByText(JavaScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
@@ -136,7 +136,7 @@ if ((a.field_detail && a.is) ||
 const element = ( <div> <h1>Hello, world!</h1> </div> );
                             """.trimIndent()
 		
-		myFixture.configureByText(JSXHarmonyFileType.INSTANCE, code)
+		myFixture.configureByText(JSXFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
@@ -167,7 +167,7 @@ const element = ( <div> <h1>Hello, world!</h1> </div> );
     const html = '<div><div><div>Hello</div></div></div>'
                                 """.trimIndent()
 		
-		myFixture.configureByText(JavaScriptFileType.INSTANCE, code)
+		myFixture.configureByText(JavaScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
@@ -201,7 +201,7 @@ const element = ( <div> <h1>Hello, world!</h1> </div> );
     const s = `<ololo>`
                                 """.trimIndent()
 		
-		myFixture.configureByText(TypeScriptFileType.INSTANCE, code)
+		myFixture.configureByText(TypeScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
@@ -226,7 +226,7 @@ const element = ( <div> <h1>Hello, world!</h1> </div> );
 	fun testIssue427() {
 		@Language("TypeScript") val code = """let example: Array<Map<string,string>>;""".trimIndent()
 		
-		myFixture.configureByText(TypeScriptFileType.INSTANCE, code)
+		myFixture.configureByText(TypeScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
