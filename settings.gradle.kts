@@ -7,6 +7,6 @@ pluginManagement {
 	}
 }
 
-include("api")
-include("clion")
-include("rider")
+include(":base")
+include(":clion")
+include(":rider")
