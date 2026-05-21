@@ -25,11 +25,7 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		val highlightSize = doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.filter { it.forcedTextAttributesKey.defaultAttributes.foregroundColor != null }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.size
+		val highlightSize = doHighlighting.getBrackets().size
 		assert(highlightSize == 16)
 	}
 	

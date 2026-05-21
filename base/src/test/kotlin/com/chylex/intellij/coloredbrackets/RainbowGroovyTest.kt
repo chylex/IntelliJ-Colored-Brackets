@@ -22,39 +22,36 @@ Map<String, Map<String, String>> convertObjectsToMapProperties(Map<String, Objec
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					angleLevel(0),
-					angleLevel(1),
-					angleLevel(1),
-					angleLevel(0),
-					
-					roundLevel(0),
-					angleLevel(0),
-					angleLevel(0),
-					roundLevel(0),
-					
-					squigglyLevel(0),
-					squigglyLevel(1),
-					angleLevel(0),
-					angleLevel(0),
-					
-					squareLevel(0),
-					
-					squareLevel(0),
-					
-					squigglyLevel(1),
-					
-					angleLevel(0),
-					angleLevel(1),
-					angleLevel(1),
-					angleLevel(0),
-					
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				angleLevel(0),
+				angleLevel(1),
+				angleLevel(1),
+				angleLevel(0),
+				
+				roundLevel(0),
+				angleLevel(0),
+				angleLevel(0),
+				roundLevel(0),
+				
+				squigglyLevel(0),
+				squigglyLevel(1),
+				angleLevel(0),
+				angleLevel(0),
+				
+				squareLevel(0),
+				
+				squareLevel(0),
+				
+				squigglyLevel(1),
+				
+				angleLevel(0),
+				angleLevel(1),
+				angleLevel(1),
+				angleLevel(0),
+				
+				squigglyLevel(0)
 			)
+		)
 	}
 }

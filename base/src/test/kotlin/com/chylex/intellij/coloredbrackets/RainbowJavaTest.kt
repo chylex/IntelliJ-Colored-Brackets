@@ -35,29 +35,26 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					angleLevel(0),
-					angleLevel(0),
-					squigglyLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					squigglyLevel(1),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(1),
-					roundLevel(2),
-					roundLevel(2),
-					roundLevel(1),
-					roundLevel(0),
-					squigglyLevel(1),
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				angleLevel(0),
+				angleLevel(0),
+				squigglyLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(1),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(1),
+				roundLevel(2),
+				roundLevel(2),
+				roundLevel(1),
+				roundLevel(0),
+				squigglyLevel(1),
+				squigglyLevel(0)
 			)
+		)
 	}
 	
 	fun testDisableRainbowForJava() {
@@ -75,12 +72,9 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf()
-			)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf()
+		)
 	}
 	
 	fun testDisableRainbowAngleBracketsForJava() {
@@ -98,27 +92,24 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					squigglyLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					squigglyLevel(1),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(1),
-					roundLevel(2),
-					roundLevel(2),
-					roundLevel(1),
-					roundLevel(0),
-					squigglyLevel(1),
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				squigglyLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(1),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(1),
+				roundLevel(2),
+				roundLevel(2),
+				roundLevel(1),
+				roundLevel(0),
+				squigglyLevel(1),
+				squigglyLevel(0)
 			)
+		)
 	}
 	
 	fun testDisableRainbowRoundBracketsForJava() {
@@ -136,19 +127,16 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					angleLevel(0),
-					angleLevel(0),
-					squigglyLevel(0),
-					squigglyLevel(1),
-					squigglyLevel(1),
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				angleLevel(0),
+				angleLevel(0),
+				squigglyLevel(0),
+				squigglyLevel(1),
+				squigglyLevel(1),
+				squigglyLevel(0)
 			)
+		)
 	}
 	
 	fun testDisableRainbowSquigglyBracketsForJava() {
@@ -166,25 +154,22 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					angleLevel(0),
-					angleLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(1),
-					roundLevel(2),
-					roundLevel(2),
-					roundLevel(1),
-					roundLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				angleLevel(0),
+				angleLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(1),
+				roundLevel(2),
+				roundLevel(2),
+				roundLevel(1),
+				roundLevel(0)
 			)
+		)
 	}
 	
 	fun testDoNOTRainbowifyBracketsWithoutContentForJava() {
@@ -202,25 +187,22 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					angleLevel(0),
-					angleLevel(0),
-					squigglyLevel(0),
-					squigglyLevel(1),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(1),
-					roundLevel(1),
-					roundLevel(0),
-					squigglyLevel(1),
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				angleLevel(0),
+				angleLevel(0),
+				squigglyLevel(0),
+				squigglyLevel(1),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(1),
+				roundLevel(1),
+				roundLevel(0),
+				squigglyLevel(1),
+				squigglyLevel(0)
 			)
+		)
 	}
 	
 	fun testDoNOTRainbowifyBracketsWhenJavaInBlacklist() {
@@ -239,11 +221,7 @@ public class Test<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.size
-			.shouldBe(0)
+		doHighlighting.getBrackets().size.shouldBe(0)
 	}
 	
 	fun testIssue391() {
@@ -262,31 +240,28 @@ public class Test {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					roundLevel(0),//{
-					
-					roundLevel(1),//(
-					roundLevel(1),//)
-					
-					roundLevel(1),//{
-					
-					roundLevel(2),
-					roundLevel(2),
-					roundLevel(2),
-					roundLevel(3),
-					roundLevel(4),
-					roundLevel(4),
-					roundLevel(3),
-					roundLevel(2),
-					
-					roundLevel(1),//}
-					
-					roundLevel(0)//}
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				roundLevel(0),//{
+				
+				roundLevel(1),//(
+				roundLevel(1),//)
+				
+				roundLevel(1),//{
+				
+				roundLevel(2),
+				roundLevel(2),
+				roundLevel(2),
+				roundLevel(3),
+				roundLevel(4),
+				roundLevel(4),
+				roundLevel(3),
+				roundLevel(2),
+				
+				roundLevel(1),//}
+				
+				roundLevel(0)//}
 			)
+		)
 	}
 }
