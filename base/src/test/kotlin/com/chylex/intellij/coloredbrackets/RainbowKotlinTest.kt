@@ -20,47 +20,44 @@ fun <T> filter(l: List<T>, f: (T) -> Boolean): MutableList<T> {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					angleLevel(0),
-					angleLevel(0),
-					
-					roundLevel(0),
-					angleLevel(0),
-					angleLevel(0),
-					roundLevel(1),
-					roundLevel(1),
-					roundLevel(0),
-					
-					angleLevel(0),
-					angleLevel(0),
-					
-					squigglyLevel(0),
-					
-					angleLevel(0),
-					angleLevel(0),
-					
-					roundLevel(0),
-					roundLevel(0),
-					squigglyLevel(1),
-					
-					roundLevel(0),
-					roundLevel(1),
-					roundLevel(1),
-					roundLevel(0),
-					
-					squigglyLevel(2),
-					squigglyLevel(2),
-					
-					squigglyLevel(1),
-					
-					squigglyLevel(0)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				angleLevel(0),
+				angleLevel(0),
 				
-				)
+				roundLevel(0),
+				angleLevel(0),
+				angleLevel(0),
+				roundLevel(1),
+				roundLevel(1),
+				roundLevel(0),
+				
+				angleLevel(0),
+				angleLevel(0),
+				
+				squigglyLevel(0),
+				
+				angleLevel(0),
+				angleLevel(0),
+				
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(1),
+				
+				roundLevel(0),
+				roundLevel(1),
+				roundLevel(1),
+				roundLevel(0),
+				
+				squigglyLevel(2),
+				squigglyLevel(2),
+				
+				squigglyLevel(1),
+				
+				squigglyLevel(0)
+			
 			)
+		)
 	}
 	
 	fun testRainbowArrowForKotlin() {
@@ -68,7 +65,7 @@ fun <T> filter(l: List<T>, f: (T) -> Boolean): MutableList<T> {
 			"""
 val a: (Int) -> Unit = { aa ->
     val b: (Int) -> Unit = { bb ->
-        val c: (Int) -> Unit  = { cc ->
+        val c: (Int) -> Unit = { cc ->
             val d: (Int) -> Unit = { dd ->
             }
         }
@@ -79,46 +76,33 @@ val a: (Int) -> Unit = { aa ->
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting
-			.filter { brackets.contains(it.text.toChar()) || it.text.contains("->") }
-			.filter { it?.forcedTextAttributesKey?.defaultAttributes != null }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					roundLevel(0),
-					roundLevel(0),
-					
-					squigglyLevel(0),
-					squigglyLevel(0),
-					
-					roundLevel(0),
-					roundLevel(0),
-					
-					squigglyLevel(1),
-					squigglyLevel(1),
-					
-					roundLevel(0),
-					roundLevel(0),
-					
-					squigglyLevel(2),
-					squigglyLevel(2),
-					
-					roundLevel(0),
-					roundLevel(0),
-					
-					squigglyLevel(3),
-					squigglyLevel(3),
-					
-					squigglyLevel(3),
-					
-					squigglyLevel(2),
-					
-					squigglyLevel(1),
-					
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(0),
+				
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(1),
+				
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(2),
+				
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(3),
+				
+				squigglyLevel(3),
+				
+				squigglyLevel(2),
+				
+				squigglyLevel(1),
+				
+				squigglyLevel(0)
 			)
+		)
 	}
 	
 	fun `ForSomeHowTheTestNotPassed "testRainbowLabelForKotlin"`() {
@@ -142,18 +126,14 @@ class AA {
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
 		
-		doHighlighting
-			.filter { it.forcedTextAttributes != null && it.text.contains("@") }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					squigglyLevel(3),
-					squigglyLevel(4),
-					squigglyLevel(3),
-					squigglyLevel(2)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				squigglyLevel(3),
+				squigglyLevel(4),
+				squigglyLevel(3),
+				squigglyLevel(2)
 			)
+		)
 	}
 	
 	fun testKotlinFunctionLiteralBracesAndArrow() {
@@ -171,20 +151,15 @@ fun t() {
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
 		
-		doHighlighting
-			.filter { brackets.contains(it.text.toChar()) }
-			.filter { it?.forcedTextAttributesKey?.defaultAttributes != null }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					roundLevel(0),
-					roundLevel(0),
-					squigglyLevel(0),
-					//squigglyLevel(1),
-					//squigglyLevel(1),
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(0),
+				squigglyLevel(1),
+				squigglyLevel(1),
+				squigglyLevel(0)
 			)
+		)
 	}
 }

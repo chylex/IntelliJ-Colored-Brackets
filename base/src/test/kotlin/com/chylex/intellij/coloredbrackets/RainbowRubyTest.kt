@@ -23,18 +23,15 @@ end
 		myFixture.configureByText(RubyFileType.RUBY, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
-		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					roundLevel(0),
-					roundLevel(1),
-					roundLevel(1),
-					roundLevel(0)
-				)
+		assertFalse(doHighlighting.isEmpty());
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				roundLevel(0),
+				roundLevel(1),
+				roundLevel(1),
+				roundLevel(0)
 			)
+		)
 	}
 	
 	fun testRainbowForIssue53Part1() {
@@ -45,16 +42,13 @@ foobar(p1: "", p2: false, p3: 1)
 		myFixture.configureByText(RubyFileType.RUBY, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
-		assertFalse(doHighlighting.isEmpty())
-		doHighlighting.filter { brackets.contains(it.text.toChar()) }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					roundLevel(0),
-					roundLevel(0)
-				)
+		assertFalse(doHighlighting.isEmpty());
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				roundLevel(0),
+				roundLevel(0)
 			)
+		)
 	}
 	
 	fun testRainbowForIssue53Part2() {
@@ -71,25 +65,20 @@ end
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting
-			.filter { brackets.contains(it.text.toChar()) }
-			.filterNot { it?.forcedTextAttributesKey?.defaultAttributes == null }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					roundLevel(0),
-					squigglyLevel(0),
-					squigglyLevel(1),
-					squigglyLevel(1),
-					squigglyLevel(1),
-					squigglyLevel(1),
-					squigglyLevel(0),
-					roundLevel(0),
-					squigglyLevel(0),
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				roundLevel(0),
+				squigglyLevel(0),
+				squigglyLevel(1),
+				squigglyLevel(1),
+				squigglyLevel(1),
+				squigglyLevel(1),
+				squigglyLevel(0),
+				roundLevel(0),
+				squigglyLevel(0),
+				squigglyLevel(0)
 			)
+		)
 	}
 	
 	fun testRainbowForIssue53Part3() {
@@ -109,19 +98,14 @@ end
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting
-			.filter { brackets.contains(it.text.toChar()) }
-			.filterNot { it?.forcedTextAttributesKey?.defaultAttributes == null }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					squareLevel(0),
-					squareLevel(0),
-					squareLevel(0),
-					squareLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				squareLevel(0),
+				squareLevel(0),
+				squareLevel(0),
+				squareLevel(0)
 			)
+		)
 	}
 	
 	fun testRainbowForIssue53Part4() {
@@ -135,20 +119,15 @@ end
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting
-			.filter { brackets.contains(it.text.toChar()) }
-			.filterNot { it?.forcedTextAttributesKey?.defaultAttributes == null }
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					squareLevel(0),
-					squareLevel(1),
-					squareLevel(2),
-					squareLevel(2),
-					squareLevel(1),
-					squareLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				squareLevel(0),
+				squareLevel(1),
+				squareLevel(2),
+				squareLevel(2),
+				squareLevel(1),
+				squareLevel(0)
 			)
+		)
 	}
 }

@@ -22,32 +22,29 @@ void main() {
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
 		assertFalse(doHighlighting.isEmpty())
-		doHighlighting
-			.map { it.forcedTextAttributesKey.defaultAttributes.foregroundColor }
-			.toTypedArray()
-			.shouldBe(
-				arrayOf(
-					roundLevel(0),
-					angleLevel(0),
-					angleLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					squigglyLevel(0),
-					angleLevel(0),
-					angleLevel(0),
-					squareLevel(0),
-					squareLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					roundLevel(0),
-					squigglyLevel(0)
-				)
+		doHighlighting.getBrackets().shouldBe(
+			arrayOf(
+				roundLevel(0),
+				angleLevel(0),
+				angleLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(0),
+				angleLevel(0),
+				angleLevel(0),
+				squareLevel(0),
+				squareLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				roundLevel(0),
+				squigglyLevel(0)
 			)
+		)
 	}
 }
