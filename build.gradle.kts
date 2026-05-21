@@ -27,6 +27,8 @@ allprojects {
 	}
 	
 	intellijPlatform {
+		sandboxContainer.set(layout.buildDirectory.map { it.dir("idea-sandbox") })
+		
 		pluginConfiguration {
 			ideaVersion {
 				sinceBuild.set("233")
@@ -56,6 +58,7 @@ subprojects {
 
 idea {
 	module {
+		excludeDirs.add(file(".kotlin"))
 		excludeDirs.add(file("build"))
 		excludeDirs.add(file("gradle"))
 	}
