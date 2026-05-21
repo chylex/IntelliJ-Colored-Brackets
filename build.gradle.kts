@@ -27,6 +27,8 @@ allprojects {
 	}
 	
 	intellijPlatform {
+		sandboxContainer.set(layout.buildDirectory.map { it.dir("idea-sandbox") })
+		
 		buildSearchableOptions = false
 		
 		pluginConfiguration {
@@ -50,6 +52,7 @@ allprojects {
 
 idea {
 	module {
+		excludeDirs.add(file(".kotlin"))
 		excludeDirs.add(file("build"))
 		excludeDirs.add(file("gradle"))
 	}
