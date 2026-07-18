@@ -57,8 +57,7 @@ object BracePairs {
 							true
 						}
 					}
-					?.map { listOf(Pair(it.leftBraceType.toString(), it), Pair(it.rightBraceType.toString(), it)) }
-					?.flatten()
+					?.flatMap { listOf(Pair(it.leftBraceType.toString(), it), Pair(it.rightBraceType.toString(), it)) }
 					?.forEach {
 						val bracePairs = braceMap[it.first]
 						if (bracePairs == null) {
@@ -74,7 +73,7 @@ object BracePairs {
 			.toMap()
 	}
 	
-	private fun getBraceTypeSetOf(language: Language): Set<IElementType> = language.bracePairs?.values?.flatten()?.map { listOf(it.leftBraceType, it.rightBraceType) }?.flatten()?.toSet() ?: emptySet()
+	private fun getBraceTypeSetOf(language: Language): Set<IElementType> = language.bracePairs?.values?.flatten()?.flatMap { listOf(it.leftBraceType, it.rightBraceType) }?.toSet() ?: emptySet()
 	
 	val braceTypeSet: (Language) -> Set<IElementType> = { language: Language -> getBraceTypeSetOf(language) }.memoize()
 	

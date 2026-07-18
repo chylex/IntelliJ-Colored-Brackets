@@ -18,8 +18,8 @@ import com.intellij.openapi.editor.impl.view.VisualLinesIterator
 import com.intellij.openapi.editor.markup.CustomHighlighterRenderer
 import com.intellij.openapi.editor.markup.RangeHighlighter
 import com.intellij.openapi.util.Condition
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlTag
@@ -36,13 +36,15 @@ import kotlin.math.max
  * */
 class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 	override fun paint(editor: Editor, highlighter: RangeHighlighter, g: Graphics) {
-		if (editor !is EditorEx) return
-		
-		val rainbowInfo = getRainbowInfo(editor, highlighter) ?: return
+		if (editor !is EditorEx) {
+			return
+		}
 		
 		val startOffset = highlighter.startOffset
 		val doc = highlighter.document
-		if (startOffset >= doc.textLength) return
+		if (startOffset >= doc.textLength) {
+			return
+		}
 		
 		val endOffset = highlighter.endOffset
 		
@@ -60,15 +62,21 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 		val startPosition = editor.offsetToVisualPosition(off)
 		val indentColumn = startPosition.column
 		
-		if (indentColumn <= 0) return
+		if (indentColumn <= 0) {
+			return
+		}
 		
 		val foldingModel = editor.foldingModel
-		if (foldingModel.isOffsetCollapsed(off)) return
+		if (foldingModel.isOffsetCollapsed(off)) {
+			return
+		}
 		
 		val headerRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineEndOffset(doc.getLineNumber(off)))
 		val tailRegion = foldingModel.getCollapsedRegionAtOffset(doc.getLineStartOffset(doc.getLineNumber(endOffset)))
 		
-		if (tailRegion != null && tailRegion === headerRegion) return
+		if (tailRegion != null && tailRegion === headerRegion) {
+			return
+		}
 		
 		val guide = editor.indentsModel.caretIndentGuide
 		val selected = if (guide != null) {
@@ -78,7 +86,7 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 		}
 		else false
 		
-		val lineHeight = editor.getLineHeight()
+		val lineHeight = editor.lineHeight
 		val start = editor.visualPositionToXY(startPosition)
 		start.y += lineHeight
 		val endPosition = editor.offsetToVisualPosition(endOffset)
@@ -95,7 +103,11 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 			}
 			maxY = StrictMath.min(maxY, clip.y + clip.height)
 		}
-		if (start.y >= maxY) return
+		if (start.y >= maxY) {
+			return
+		}
+		
+		val rainbowInfo = getRainbowInfo(editor, highlighter) ?: return
 		val targetX = max(0, start.x + EditorPainter.getIndentGuideShift(editor)).toDouble()
 		g.color = if (selected) {
 			rainbowInfo.color
@@ -163,12 +175,11 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 		}
 		
 		private fun getRainbowInfo(editor: EditorEx, highlighter: RangeHighlighter): RainbowInfo? {
-			val virtualFile = editor.virtualFile?.takeIf { it.isValid } ?: return null
-			val document = editor.document
 			val project = editor.project ?: return null
+			val document = editor.document
 			
 			return ReadAction.compute<RainbowInfo, Throwable> {
-				val psiFile = PsiManager.getInstance(project).findFile(virtualFile) ?: return@compute null
+				val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) ?: return@compute null
 				var element = try {
 					psiFile.findElementAt(highlighter.endOffset)?.parent ?: return@compute null
 				} catch (_: Throwable) {
@@ -269,6 +280,5 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 		
 		private fun XmlTag.getEndTagStartLineNumber(document: Document): Int? =
 			lastChild?.findPrevSibling(XML_END_TAG_START_CONDITION)?.let { document.lineNumber(it.startOffset) }
-		
 	}
 }

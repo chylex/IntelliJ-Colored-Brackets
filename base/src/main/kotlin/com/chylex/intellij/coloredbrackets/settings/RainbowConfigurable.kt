@@ -17,7 +17,7 @@ class RainbowConfigurable : SearchableConfigurable {
 	}
 	
 	override fun isModified(): Boolean {
-		return settingsForm?.isModified ?: return false
+		return settingsForm?.isModified ?: false
 	}
 	
 	@Throws(ConfigurationException::class)

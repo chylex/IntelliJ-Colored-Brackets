@@ -134,13 +134,14 @@ private fun matchColor(hueValue: Int, hue: Hue): Color {
 				hueVal -= 360
 			}
 			
-			for (color in Color.values()) {
+			for (color in Color.entries) {
 				if (hueVal in color.hueRange.first..color.hueRange.second) {
 					return color
 				}
 			}
+			
 			// Returning Monochrome if we can't find a value, but this should never happen
-			return Color.monochrome
+			Color.monochrome
 		}
 	}
 }

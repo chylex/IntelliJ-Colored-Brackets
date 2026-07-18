@@ -23,7 +23,7 @@ end
 		myFixture.configureByText(RubyFileType.RUBY, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
-		assertFalse(doHighlighting.isEmpty());
+		assertFalse(doHighlighting.isEmpty())
 		doHighlighting.getBrackets().shouldBe(
 			arrayOf(
 				roundLevel(0),
@@ -42,7 +42,7 @@ foobar(p1: "", p2: false, p3: 1)
 		myFixture.configureByText(RubyFileType.RUBY, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()
 		val doHighlighting = myFixture.doHighlighting()
-		assertFalse(doHighlighting.isEmpty());
+		assertFalse(doHighlighting.isEmpty())
 		doHighlighting.getBrackets().shouldBe(
 			arrayOf(
 				roundLevel(0),

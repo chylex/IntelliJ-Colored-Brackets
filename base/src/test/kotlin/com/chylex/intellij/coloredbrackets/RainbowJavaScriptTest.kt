@@ -60,7 +60,7 @@ console.log(a == b)
 	
 	fun testIssue21() {
 		
-		@Language("JavaScript") val code = "open (\$" + "{f})\n" + "open (\$" + "{f} )"
+		@Language("JavaScript") val code = $$"open (${f})\nopen (${f} )"
 		
 		myFixture.configureByText(JavaScriptFileType, code)
 		PsiDocumentManager.getInstance(project).commitAllDocuments()

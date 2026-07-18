@@ -46,7 +46,9 @@ class RainbowIndentsPass internal constructor(
 	
 	override fun doCollectInformation(progress: ProgressIndicator) {
 		val stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT)
-		if (stamp != null && stamp == nowStamp()) return
+		if (stamp != null && stamp == nowStamp()) {
+			return
+		}
 		
 		myDescriptors = buildDescriptors()
 		
@@ -72,7 +74,9 @@ class RainbowIndentsPass internal constructor(
 		val stamp = myEditor.getUserData(LAST_TIME_INDENTS_BUILT)
 		val nowStamp = nowStamp()
 		
-		if (stamp == nowStamp) return
+		if (stamp == nowStamp) {
+			return
+		}
 		
 		myEditor.putUserData(LAST_TIME_INDENTS_BUILT, nowStamp)
 		
@@ -142,7 +146,9 @@ class RainbowIndentsPass internal constructor(
 	}
 	
 	private fun buildDescriptors(): List<IndentGuideDescriptor> {
-		if (!isRainbowIndentGuidesShown(this.myProject)) return emptyList()
+		if (!isRainbowIndentGuidesShown(this.myProject)) {
+			return emptyList()
+		}
 		
 		val calculator = IndentsCalculator()
 		calculator.calculate()

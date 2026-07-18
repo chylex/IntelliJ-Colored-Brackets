@@ -39,7 +39,7 @@ class RainbowOptionsPanel(
 	private lateinit var colorLabel4: JLabel
 	private lateinit var colorLabel5: JLabel
 	
-	private val colorLabels: Array<JLabel>
+	private val colorLabels = arrayOf(colorLabel1, colorLabel2, colorLabel3, colorLabel4, colorLabel5)
 	
 	private lateinit var color1: ColorPanel
 	private lateinit var color2: ColorPanel
@@ -47,7 +47,7 @@ class RainbowOptionsPanel(
 	private lateinit var color4: ColorPanel
 	private lateinit var color5: ColorPanel
 	
-	private val colors: Array<ColorPanel>
+	private val colors = arrayOf(color1, color2, color3, color4, color5)
 	
 	private lateinit var gradientLabel: JLabel
 	
@@ -56,9 +56,6 @@ class RainbowOptionsPanel(
 		EventDispatcher.create(ColorAndFontSettingsListener::class.java)
 	
 	init {
-		colors = arrayOf(color1, color2, color3, color4, color5)
-		colorLabels = arrayOf(colorLabel1, colorLabel2, colorLabel3, colorLabel4, colorLabel5)
-		
 		val actionListener = ActionListener {
 			eventDispatcher.multicaster.settingsChanged()
 			options.stateChanged()
@@ -70,7 +67,9 @@ class RainbowOptionsPanel(
 		
 		options.addListener(object : ColorAndFontSettingsListener.Abstract() {
 			override fun settingsChanged() {
-				if (!schemesProvider.areSchemesLoaded()) return
+				if (!schemesProvider.areSchemesLoaded()) {
+					return
+				}
 				if (optionsTree.selectedValue != null) {
 					// update options after global state change
 					processListValueChanged()
@@ -236,7 +235,9 @@ class RainbowOptionsPanel(
 				}
 				
 				val pathInChild = findOption(childObject, matcher)
-				if (pathInChild != null) return pathInChild
+				if (pathInChild != null) {
+					return pathInChild
+				}
 			}
 			
 			return null
