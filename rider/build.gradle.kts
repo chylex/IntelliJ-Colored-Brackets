@@ -8,6 +8,6 @@ dependencies {
 			useInstaller = false
 		}
 		
-		bundledModule("intellij.rider.cpp.core.languages")
+		bundledModule("intellij.rider.languages")
 	}
 }

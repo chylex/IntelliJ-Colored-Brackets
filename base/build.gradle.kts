@@ -19,14 +19,17 @@ dependencies {
 		bundledPlugin("org.jetbrains.plugins.yaml")
 		
 		compatiblePlugin("PythonCore")
+		compatiblePlugin("com.intellij.clion")
+		compatiblePlugin("com.intellij.nativeDebug")
 		compatiblePlugin("com.jetbrains.php")
 		compatiblePlugin("com.jetbrains.plugins.jade")
 		compatiblePlugin("com.jetbrains.sh")
 		compatiblePlugin("org.intellij.scala")
+		compatiblePlugin("org.jetbrains.plugins.clion.radler")
 		compatiblePlugin("org.jetbrains.plugins.go-template")
 		compatiblePlugin("org.jetbrains.plugins.ruby")
 		
-		plugin("Dart:504.0.0") // https://plugins.jetbrains.com/plugin/6351-dart/versions/stable
+		plugin("Dart:507.0.0") // https://plugins.jetbrains.com/plugin/6351-dart/versions/stable
 		
 		testFramework(TestFrameworkType.Platform)
 		testFramework(TestFrameworkType.Plugin.Java)

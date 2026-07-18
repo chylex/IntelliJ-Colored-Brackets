@@ -48,8 +48,8 @@
   ]]></change-notes>
   
   <depends>com.intellij.modules.lang</depends>
-  <depends optional="true" config-file="plugin-clion-nova.xml">org.jetbrains.plugins.clion.radler</depends>
-  <depends optional="true" config-file="plugin-clion.xml">com.intellij.modules.clion</depends>
+  <depends optional="true" config-file="plugin-clion-classic.xml">com.intellij.cidr.lang</depends>
+  <depends optional="true" config-file="plugin-cpp.xml">org.jetbrains.plugins.clion.radler</depends>
   <depends optional="true" config-file="plugin-dart.xml">Dart</depends>
   <depends optional="true" config-file="plugin-go-template.xml">org.jetbrains.plugins.go-template</depends>
   <depends optional="true" config-file="plugin-groovy.xml">org.intellij.groovy</depends>
