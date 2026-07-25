@@ -11,12 +11,14 @@ import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SoftWrap
+import com.intellij.openapi.editor.ex.DocumentEx
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.editor.impl.view.EditorPainter
 import com.intellij.openapi.editor.impl.view.VisualLinesIterator
 import com.intellij.openapi.editor.markup.CustomHighlighterRenderer
 import com.intellij.openapi.editor.markup.RangeHighlighter
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Condition
 import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
@@ -178,27 +180,30 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 			val project = editor.project ?: return null
 			val document = editor.document
 			
-			return ReadAction.compute<RainbowInfo, Throwable> {
-				val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) ?: return@compute null
-				var element = try {
-					psiFile.findElementAt(highlighter.endOffset)?.parent ?: return@compute null
-				} catch (_: Throwable) {
-					return@compute null
-				}
-				
-				var rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element]
-				if (rainbowInfo == null && psiFile is XmlFile && element !is XmlTag) {
-					element = PsiTreeUtil.findFirstParent(element, true, XML_TAG_PARENT_CONDITION) ?: return@compute null
-					rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element] ?: return@compute null
-				}
-				
-				if (!element.isValid || !checkBoundary(document, element, highlighter)) {
-					null
-				}
-				else {
-					rainbowInfo
-				}
+			return ReadAction.computeBlocking<RainbowInfo?, Throwable> {
+				getRainbowInfoInReadAction(project, document, highlighter)
 			}
+		}
+		
+		private fun getRainbowInfoInReadAction(project: Project, document: DocumentEx, highlighter: RangeHighlighter): RainbowInfo? {
+			val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) ?: return null
+			var element = try {
+				psiFile.findElementAt(highlighter.endOffset)?.parent ?: return null
+			} catch (_: Throwable) {
+				return null
+			}
+			
+			var rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element]
+			if (rainbowInfo == null && psiFile is XmlFile && element !is XmlTag) {
+				element = PsiTreeUtil.findFirstParent(element, true, XML_TAG_PARENT_CONDITION) ?: return null
+				rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element] ?: return null
+			}
+			
+			if (!element.isValid || !checkBoundary(document, element, highlighter)) {
+				return null
+			}
+			
+			return rainbowInfo
 		}
 		
 		/***
