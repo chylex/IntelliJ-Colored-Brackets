@@ -35,6 +35,12 @@ allprojects {
 				untilBuild.set(provider { null })
 			}
 		}
+		
+		pluginVerification {
+			ides {
+				current()
+			}
+		}
 	}
 	
 	kotlin {
