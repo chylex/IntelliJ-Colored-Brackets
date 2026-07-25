@@ -83,6 +83,10 @@
     <editorNotificationProvider implementation="com.chylex.intellij.coloredbrackets.RainbowifyBanner" />
   </extensions>
   
+  <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <supportsKotlinPluginMode supportsK2="true" />
+  </extensions>
+  
   <applicationListeners>
     <listener class="com.chylex.intellij.coloredbrackets.listener.RainbowColorsSchemeListener" topic="com.intellij.openapi.editor.colors.EditorColorsListener" />
   </applicationListeners>
