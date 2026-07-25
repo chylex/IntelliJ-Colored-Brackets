@@ -8,16 +8,21 @@
     <br><br>
     <b>Key Changes</b>
     <ul>
+      <li>Updates for new IntelliJ Platform versions</li>
       <li>Support for C# (Rider)</li>
-      <li>Support for C++ (Rider, CLion, CLion Nova)</li>
+      <li>Support for C++</li>
       <li>Support for Settings Sync</li>
       <li>Improved highlighting performance</li>
       <li>Increased default setting for maximum line count from 1K to 100K</li>
-      <li>Fixed service initialization warnings reported by 2024.2+</li>
     </ul>
   ]]></description>
   
   <change-notes><![CDATA[
+    <b>Version 1.5.0</b>
+    <ul>
+      <li>Updated to IntelliJ Platform 2026.2.</li>
+      <li>Added support for C++ plugin for IntelliJ IDEA.</li>
+    </ul>
     <b>Version 1.4.0</b>
     <ul>
       <li>Updated to IntelliJ Platform 2025.3.</li>
