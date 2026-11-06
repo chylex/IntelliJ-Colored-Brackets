@@ -109,7 +109,7 @@ class RainbowIndentsPass internal constructor(
 				val cmp = compare(range, highlighter)
 				when {
 					cmp < 0 -> {
-						newHighlighters.add(createHighlighter(mm, range))
+						createHighlighter(mm, range)?.let(newHighlighters::add)
 						curRange++
 					}
 					
@@ -137,7 +137,7 @@ class RainbowIndentsPass internal constructor(
 		val startRangeIndex = curRange
 		DocumentUtil.executeInBulk(document, myRanges.size > 10000) {
 			for (i in startRangeIndex until myRanges.size) {
-				newHighlighters.add(createHighlighter(mm, myRanges[i]))
+				createHighlighter(mm, myRanges[i])?.let(newHighlighters::add)
 			}
 		}
 		
@@ -310,11 +310,24 @@ class RainbowIndentsPass internal constructor(
 		}
 	}
 	
+	private fun createHighlighter(mm: MarkupModel, range: TextRange): RangeHighlighter? {
+		val rainbowInfo = RainbowIndentGuideRenderer.getRainbowInfo(myEditor, range.startOffset, range.endOffset) ?: return null
+		
+		return mm.addRangeHighlighter(
+			range.startOffset,
+			range.endOffset,
+			0,
+			null,
+			HighlighterTargetArea.EXACT_RANGE
+		).apply {
+			customRenderer = RainbowIndentGuideRenderer(rainbowInfo)
+		}
+	}
+	
+	
 	companion object {
 		private val INDENT_HIGHLIGHTERS_IN_EDITOR_KEY = Key.create<MutableList<RangeHighlighter>>("_INDENT_HIGHLIGHTERS_IN_EDITOR_KEY_")
 		private val LAST_TIME_INDENTS_BUILT = Key.create<Long>("_LAST_TIME_INDENTS_BUILT_")
-		
-		private val RENDERER = RainbowIndentGuideRenderer()
 		
 		private fun isRainbowIndentGuidesShown(project: Project): Boolean {
 			if (RainbowSettings.instance.disableRainbowIndentsInZenMode && isZenModeEnabled(project)) {
@@ -325,18 +338,6 @@ class RainbowIndentsPass internal constructor(
 		
 		private fun isZenModeEnabled(project: Project) =
 			ToggleZenModeAction.isZenModeEnabled(project)
-		
-		private fun createHighlighter(mm: MarkupModel, range: TextRange): RangeHighlighter {
-			return mm.addRangeHighlighter(
-				range.startOffset,
-				range.endOffset,
-				0,
-				null,
-				HighlighterTargetArea.EXACT_RANGE
-			).apply {
-				customRenderer = RENDERER
-			}
-		}
 		
 		private fun compare(r: TextRange, h: RangeHighlighter): Int {
 			val answer = r.startOffset - h.startOffset

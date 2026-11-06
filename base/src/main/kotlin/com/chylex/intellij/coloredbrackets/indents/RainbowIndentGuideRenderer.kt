@@ -7,11 +7,9 @@ import com.chylex.intellij.coloredbrackets.util.findNextSibling
 import com.chylex.intellij.coloredbrackets.util.findPrevSibling
 import com.chylex.intellij.coloredbrackets.util.lineNumber
 import com.chylex.intellij.coloredbrackets.util.startOffset
-import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SoftWrap
-import com.intellij.openapi.editor.ex.DocumentEx
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.editor.impl.view.EditorPainter
@@ -33,10 +31,11 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import kotlin.math.max
 
-/** From [com.intellij.codeInsight.daemon.impl.IndentGuideRenderer]
- *  Commit history : https://sourcegraph.com/github.com/JetBrains/intellij-community/-/blob/platform/lang-impl/src/com/intellij/codeInsight/daemon/impl/IndentGuideRenderer.java#tab=history
- * */
-class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
+/**
+ * From [com.intellij.codeInsight.daemon.impl.indentGuide.IndentGuideRenderer]
+ * Commit history : https://sourcegraph.com/github.com/JetBrains/intellij-community/-/blob/platform/lang-impl/src/com/intellij/codeInsight/daemon/impl/IndentGuideRenderer.java#tab=history
+ */
+class RainbowIndentGuideRenderer(private val rainbowInfo: RainbowInfo) : CustomHighlighterRenderer {
 	override fun paint(editor: Editor, highlighter: RangeHighlighter, g: Graphics) {
 		if (editor !is EditorEx) {
 			return
@@ -109,7 +108,6 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 			return
 		}
 		
-		val rainbowInfo = getRainbowInfo(editor, highlighter) ?: return
 		val targetX = max(0, start.x + EditorPainter.getIndentGuideShift(editor)).toDouble()
 		g.color = if (selected) {
 			rainbowInfo.color
@@ -176,19 +174,17 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 			element is XmlToken && element.tokenType == XmlTokenType.XML_TAG_END
 		}
 		
-		private fun getRainbowInfo(editor: EditorEx, highlighter: RangeHighlighter): RainbowInfo? {
+		fun getRainbowInfo(editor: Editor, startOffset: Int, endOffset: Int): RainbowInfo? {
 			val project = editor.project ?: return null
 			val document = editor.document
 			
-			return ReadAction.computeBlocking<RainbowInfo?, Throwable> {
-				getRainbowInfoInReadAction(project, document, highlighter)
-			}
+			return getRainbowInfoInReadAction(project, document, startOffset, endOffset)
 		}
 		
-		private fun getRainbowInfoInReadAction(project: Project, document: DocumentEx, highlighter: RangeHighlighter): RainbowInfo? {
+		private fun getRainbowInfoInReadAction(project: Project, document: Document, startOffset: Int, endOffset: Int): RainbowInfo? {
 			val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) ?: return null
 			var element = try {
-				psiFile.findElementAt(highlighter.endOffset)?.parent ?: return null
+				psiFile.findElementAt(endOffset)?.parent ?: return null
 			} catch (_: Throwable) {
 				return null
 			}
@@ -199,7 +195,7 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 				rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element] ?: return null
 			}
 			
-			if (!element.isValid || !checkBoundary(document, element, highlighter)) {
+			if (!element.isValid || !checkBoundary(document, element, startOffset, endOffset)) {
 				return null
 			}
 			
@@ -209,9 +205,9 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 		/***
 		 * introduced from https://github.com/izhangzhihao/intellij-rainbow-brackets/commit/d9d40e6910e9c15fbdcba12280df18019ea170b5
 		 */
-		private fun checkBoundary(document: Document, element: PsiElement, highlighter: RangeHighlighter): Boolean {
+		private fun checkBoundary(document: Document, element: PsiElement, startOffset: Int, endOffset: Int): Boolean {
 			val elementStartLine = document.lineNumber(element.startOffset) ?: return false
-			val highlighterStartLine = document.lineNumber(highlighter.startOffset) ?: return false
+			val highlighterStartLine = document.lineNumber(startOffset) ?: return false
 			
 			var xmlStartTagEndLine: Int? = null
 			var xmlEndTagStartLine: Int? = null
@@ -248,7 +244,7 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 			}
 			
 			val elementEndLine = document.lineNumber(element.endOffset) ?: return false
-			val highlighterEndLine = document.lineNumber(highlighter.endOffset) ?: return false
+			val highlighterEndLine = document.lineNumber(endOffset) ?: return false
 			val isValidEndBoundary = if (element is XmlTag) {
 				/*
 				 *     <tag                  // [ ] element & highlighter start line
