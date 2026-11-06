@@ -2,41 +2,25 @@ package com.chylex.intellij.coloredbrackets.indents
 
 import com.chylex.intellij.coloredbrackets.RainbowInfo
 import com.chylex.intellij.coloredbrackets.util.alphaBlend
-import com.chylex.intellij.coloredbrackets.util.endOffset
-import com.chylex.intellij.coloredbrackets.util.findNextSibling
-import com.chylex.intellij.coloredbrackets.util.findPrevSibling
-import com.chylex.intellij.coloredbrackets.util.lineNumber
-import com.chylex.intellij.coloredbrackets.util.startOffset
-import com.intellij.openapi.application.ReadAction
-import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.SoftWrap
-import com.intellij.openapi.editor.ex.DocumentEx
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.editor.impl.EditorImpl
 import com.intellij.openapi.editor.impl.view.EditorPainter
 import com.intellij.openapi.editor.impl.view.VisualLinesIterator
 import com.intellij.openapi.editor.markup.CustomHighlighterRenderer
 import com.intellij.openapi.editor.markup.RangeHighlighter
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.Condition
-import com.intellij.psi.PsiDocumentManager
-import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.xml.XmlFile
-import com.intellij.psi.xml.XmlTag
-import com.intellij.psi.xml.XmlToken
-import com.intellij.psi.xml.XmlTokenType
 import com.intellij.ui.paint.LinePainter2D
 import com.intellij.util.text.CharArrayUtil
 import java.awt.Graphics
 import java.awt.Graphics2D
 import kotlin.math.max
 
-/** From [com.intellij.codeInsight.daemon.impl.IndentGuideRenderer]
- *  Commit history : https://sourcegraph.com/github.com/JetBrains/intellij-community/-/blob/platform/lang-impl/src/com/intellij/codeInsight/daemon/impl/IndentGuideRenderer.java#tab=history
- * */
-class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
+/**
+ * From [com.intellij.codeInsight.daemon.impl.indentGuide.IndentGuideRenderer]
+ * Commit history : https://sourcegraph.com/github.com/JetBrains/intellij-community/-/blob/platform/lang-impl/src/com/intellij/codeInsight/daemon/impl/IndentGuideRenderer.java#tab=history
+ */
+class RainbowIndentGuideRenderer(private val rainbowInfo: RainbowInfo) : CustomHighlighterRenderer {
 	override fun paint(editor: Editor, highlighter: RangeHighlighter, g: Graphics) {
 		if (editor !is EditorEx) {
 			return
@@ -109,7 +93,6 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 			return
 		}
 		
-		val rainbowInfo = getRainbowInfo(editor, highlighter) ?: return
 		val targetX = max(0, start.x + EditorPainter.getIndentGuideShift(editor)).toDouble()
 		g.color = if (selected) {
 			rainbowInfo.color
@@ -165,125 +148,5 @@ class RainbowIndentGuideRenderer : CustomHighlighterRenderer {
 				LinePainter2D.paint((g as Graphics2D), targetX, startY.toDouble(), targetX, maxY - 1.toDouble())
 			}
 		}
-	}
-	
-	companion object {
-		private val XML_TAG_PARENT_CONDITION = Condition<PsiElement> { it is XmlTag }
-		private val XML_END_TAG_START_CONDITION: (PsiElement) -> Boolean = { element ->
-			element is XmlToken && element.tokenType == XmlTokenType.XML_END_TAG_START
-		}
-		private val XML_TAG_END_CONDITION: (PsiElement) -> Boolean = { element ->
-			element is XmlToken && element.tokenType == XmlTokenType.XML_TAG_END
-		}
-		
-		private fun getRainbowInfo(editor: EditorEx, highlighter: RangeHighlighter): RainbowInfo? {
-			val project = editor.project ?: return null
-			val document = editor.document
-			
-			return ReadAction.computeBlocking<RainbowInfo?, Throwable> {
-				getRainbowInfoInReadAction(project, document, highlighter)
-			}
-		}
-		
-		private fun getRainbowInfoInReadAction(project: Project, document: DocumentEx, highlighter: RangeHighlighter): RainbowInfo? {
-			val psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document) ?: return null
-			var element = try {
-				psiFile.findElementAt(highlighter.endOffset)?.parent ?: return null
-			} catch (_: Throwable) {
-				return null
-			}
-			
-			var rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element]
-			if (rainbowInfo == null && psiFile is XmlFile && element !is XmlTag) {
-				element = PsiTreeUtil.findFirstParent(element, true, XML_TAG_PARENT_CONDITION) ?: return null
-				rainbowInfo = RainbowInfo.RAINBOW_INFO_KEY[element] ?: return null
-			}
-			
-			if (!element.isValid || !checkBoundary(document, element, highlighter)) {
-				return null
-			}
-			
-			return rainbowInfo
-		}
-		
-		/***
-		 * introduced from https://github.com/izhangzhihao/intellij-rainbow-brackets/commit/d9d40e6910e9c15fbdcba12280df18019ea170b5
-		 */
-		private fun checkBoundary(document: Document, element: PsiElement, highlighter: RangeHighlighter): Boolean {
-			val elementStartLine = document.lineNumber(element.startOffset) ?: return false
-			val highlighterStartLine = document.lineNumber(highlighter.startOffset) ?: return false
-			
-			var xmlStartTagEndLine: Int? = null
-			var xmlEndTagStartLine: Int? = null
-			
-			val isValidStartBoundary = if (element is XmlTag) {
-				/*
-				 *     <tag                  // [*] element & highlighter start line
-				 *     | <- vertical indent
-				 *     >                     // [*] highlighter start/end line, start tag end line
-				 *     | <- vertical indent
-				 *     </tag                 // [*] highlighter start/end line, end tag start line
-				 *     | <- vertical indent
-				 *     >                     // [ ] element/highlighter end line
-				 */
-				xmlStartTagEndLine = element.getStartTagEndLineNumber(document)
-				xmlEndTagStartLine = element.getEndTagStartLineNumber(document)
-				
-				highlighterStartLine == elementStartLine ||
-					highlighterStartLine == xmlStartTagEndLine ||
-					highlighterStartLine == xmlEndTagStartLine
-			}
-			else {
-				/*
-				 * Element start line > Highlighter start line:
-				 *     function foo(arg1,   // highlighter start line
-				 *     |            arg2) { // element start line
-				 *     | <- vertical indent
-				 *     }                    // element & highlighter end line
-				 */
-				elementStartLine >= highlighterStartLine
-			}
-			if (!isValidStartBoundary) {
-				return false
-			}
-			
-			val elementEndLine = document.lineNumber(element.endOffset) ?: return false
-			val highlighterEndLine = document.lineNumber(highlighter.endOffset) ?: return false
-			val isValidEndBoundary = if (element is XmlTag) {
-				/*
-				 *     <tag                  // [ ] element & highlighter start line
-				 *     | <- vertical indent
-				 *     >                     // [*] highlighter start/end line, start tag end line
-				 *     | <- vertical indent
-				 *     </tag                 // [*] highlighter start/end line, end tag start line
-				 *     | <- vertical indent
-				 *     >                     // [*] element/highlighter end line
-				 */
-				highlighterEndLine == elementEndLine ||
-					highlighterEndLine == xmlStartTagEndLine ||
-					highlighterEndLine == xmlEndTagStartLine
-			}
-			else {
-				/*
-				 * Element end line != Highlighter end line:
-				 *     function foo() {     // element & highlighter start line
-				 *     | <- vertical indent
-				 *   var bar = "bar";       // highlighter end line
-				 *     }                    // element end line
-				 */
-				elementEndLine == highlighterEndLine
-			}
-			if (!isValidEndBoundary) {
-				return false
-			}
-			
-			return true
-		}
-		
-		private fun XmlTag.getStartTagEndLineNumber(document: Document): Int? =
-			firstChild?.findNextSibling(XML_TAG_END_CONDITION)?.let { document.lineNumber(it.startOffset) }
-		
-		private fun XmlTag.getEndTagStartLineNumber(document: Document): Int? =
-			lastChild?.findPrevSibling(XML_END_TAG_START_CONDITION)?.let { document.lineNumber(it.startOffset) }
 	}
 }
