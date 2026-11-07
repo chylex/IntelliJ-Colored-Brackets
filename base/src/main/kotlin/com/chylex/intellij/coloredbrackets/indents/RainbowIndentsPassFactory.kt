@@ -9,13 +9,12 @@ import com.intellij.openapi.editor.impl.ImaginaryEditor
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFile
 
-class RainbowIndentsPassFactory :
-	TextEditorHighlightingPassFactoryRegistrar, TextEditorHighlightingPassFactory {
+class RainbowIndentsPassFactory : TextEditorHighlightingPassFactoryRegistrar, TextEditorHighlightingPassFactory {
 	
 	override fun createHighlightingPass(file: PsiFile, editor: Editor): RainbowIndentsPass? {
 		return when (editor) {
 			is ImaginaryEditor -> null
-			else               -> RainbowIndentsPass(file.project, editor, file)
+			else               -> RainbowIndentsPass(file, editor)
 		}
 	}
 	
