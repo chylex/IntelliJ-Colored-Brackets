@@ -18,6 +18,11 @@
   ]]></description>
   
   <change-notes><![CDATA[
+    <b>Version 1.5.1</b>
+    <ul>
+      <li>Removed read lock from indent guide renderer, which is forbidden since 2026.3.</li>
+      <li>Reworked indent guides to reuse calculations already done by the IDE.</li>
+    </ul>
     <b>Version 1.5.0</b>
     <ul>
       <li>Updated to IntelliJ Platform 2026.2.</li>
