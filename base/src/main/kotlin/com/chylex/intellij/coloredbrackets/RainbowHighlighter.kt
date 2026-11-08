@@ -1,5 +1,8 @@
 package com.chylex.intellij.coloredbrackets
 
+import com.chylex.intellij.coloredbrackets.color.Luminosity
+import com.chylex.intellij.coloredbrackets.color.RandomHue
+import com.chylex.intellij.coloredbrackets.color.randomColor
 import com.chylex.intellij.coloredbrackets.settings.RainbowSettings
 import com.chylex.intellij.coloredbrackets.util.alphaBlend
 import com.chylex.intellij.coloredbrackets.util.create
@@ -17,7 +20,6 @@ import com.intellij.openapi.editor.markup.EffectType
 import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.psi.PsiElement
 import com.intellij.ui.JBColor
-import org.intellij.lang.annotations.Language
 import org.jetbrains.annotations.TestOnly
 import java.awt.Color
 import java.awt.Font
@@ -124,28 +126,16 @@ object RainbowHighlighter {
 			else {
 				key
 			}
-		} catch (e: Exception) {
+		} catch (_: Exception) {
 			memGetRainbowColorByLevel(isDarkEditor(), rainbowName, ind)
 		}
 	}
 	
 	private fun generateColor(isDark: Boolean, rainbowName: String, level: Int): TextAttributesKey {
-		if (!settings.customColorGeneratorOption.isNullOrBlank()) {
-			return genByOption(settings.customColorGeneratorOption!!, rainbowName, level)
-		}
-		if (isDark) {
-			@Language("JSON") val darkOption = """{"luminosity": "light"}"""
-			return genByOption(darkOption, rainbowName, level)
-		}
-		@Language("JSON") val lightOption = """{"luminosity": "dark"}"""
-		return genByOption(lightOption, rainbowName, level)
+		val luminosity = if (isDark) Luminosity.light else Luminosity.dark
+		val color = randomColor(RandomHue, luminosity)
+		return create("$rainbowName-$level", TextAttributes(color, null, null, null, 0))
 	}
-	
-	private fun genByOption(option: String, rainbowName: String, level: Int) =
-		create(
-			"$rainbowName-$level",
-			TextAttributes(randomColor(option), null, null, null, 0)
-		)
 	
 	val memGetRainbowColorByLevel = { isDark: Boolean, rainbowName: String, level: Int -> generateColor(isDark, rainbowName, level) }.memoize()
 	
