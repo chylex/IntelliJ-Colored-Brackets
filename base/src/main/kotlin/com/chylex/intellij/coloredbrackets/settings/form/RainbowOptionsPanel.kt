@@ -12,7 +12,6 @@ import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.EventDispatcher
-import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode
 import java.awt.Color
 import java.awt.event.ActionListener
 import javax.swing.JLabel
@@ -79,7 +78,7 @@ class RainbowOptionsPanel(
 		
 		optionsTree.apply {
 			isRootVisible = false
-			model = DefaultTreeModel(DefaultMutableTreeTableNode())
+			model = DefaultTreeModel(DefaultMutableTreeNode())
 			selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
 			addTreeSelectionListener {
 				if (schemesProvider.areSchemesLoaded()) {
